@@ -8,15 +8,35 @@ public class GameManager : MonoBehaviour {
 
 	public float radius;
 	public float spawnRateInSeconds;
+	public float maxPopulation = 30;
 	public GameObject[] enemies;
 	Vector3 originPoint = Vector3.zero;
 	private float timeSinceLastSpawn = 0.0f;
 	private float timeOfLastSpawn;
 
+	List<GameObject> enemyPopulation;
+	List<GameObject> wavePopulation;
+
 
 	// Use this for initialization
 	void Start ()
 	{
+		enemyPopulation = new List<GameObject>();
+		wavePopulation = new List<GameObject>();
+
+		// Create host of enemies in the wing
+		for (int i = 0; i < maxPopulation; i++)
+		{
+			//int enemyType = Random.Range(0, enemies.Length);
+			GameObject enemy = (GameObject)Instantiate(enemies[0]);
+			enemy.SetActive(false);
+			enemyPopulation.Add(enemy);
+			Debug.Log("added " + enemy.name + " to pool party");
+			//
+
+			//GameObject wave = (GameObject)Instantiate()
+		}
+
 		// Checks if a GameManager exists, and destroys the second copy.
 		if (instance)
 		{
@@ -51,7 +71,23 @@ public class GameManager : MonoBehaviour {
 			//Debug.Log(timeSinceLastSpawn);
 			timeSinceLastSpawn = 0.0f;
 			SpawnEnemy();
+		}
 
+		if (Input.GetKeyDown(KeyCode.Alpha1))
+		{
+			UI_Manager.instance.SetBulletType(0);
+		}
+		if (Input.GetKeyDown(KeyCode.Alpha2))
+		{
+			UI_Manager.instance.SetBulletType(1);
+		}
+		if (Input.GetKeyDown(KeyCode.Alpha3))
+		{
+			UI_Manager.instance.SetBulletType(2);
+		}
+		if (Input.GetKeyDown(KeyCode.Alpha4))
+		{
+			UI_Manager.instance.SetBulletType(3);
 		}
 
 	}
@@ -69,7 +105,18 @@ public class GameManager : MonoBehaviour {
 
 		Vector3 spawnLocation = new Vector3(x, 0.0f, z);
 
-		Instantiate(enemies[enemyTypeToSpawn], spawnLocation, Quaternion.identity);
+		for (int i = 0; i < enemyPopulation.Count; i++)
+		{
+			if (!enemyPopulation[i].activeInHierarchy)
+			{
+				GameObject newEnemy = enemyPopulation[i];
+				newEnemy.transform.position = spawnLocation;
+				newEnemy.SetActive(true);
+				break;
+			}
+		}
+
+		///Instantiate(enemies[enemyTypeToSpawn], spawnLocation, Quaternion.identity);
 		Debug.DrawLine(transform.position, spawnLocation, Color.red, spawnRateInSeconds);
 	}
 
@@ -77,24 +124,24 @@ public class GameManager : MonoBehaviour {
 	/// Spawns numberOfEnemiesToSpawn at a series of random locations.
 	/// </summary>
 	/// <param name="numberOfEnemiesToSpawn"></param>
-	void SpawnEnemy(uint numberOfEnemiesToSpawn)
-	{
-		//Vector3 lastSpawnLocation = new Vector3();
-		for (int i = 0; i < numberOfEnemiesToSpawn; i++)
-		{
-			float theta = Random.Range(0.0f, 360.0f);
-			int enemyTypeToSpawn = Random.Range(0, enemies.Length);
-			Debug.Log(theta);
-			float x = transform.position.x + radius * Mathf.Cos(theta * Mathf.Deg2Rad);
-			float y = transform.position.y + radius * Mathf.Sin(theta * Mathf.Deg2Rad);
+	/// 
+	//void SpawnEnemy(uint numberOfEnemiesToSpawn)
+	//{
+	//	//Vector3 lastSpawnLocation = new Vector3();
+	//	for (int i = 0; i < numberOfEnemiesToSpawn; i++)
+	//	{
+	//		float theta = Random.Range(0.0f, 360.0f);
+	//		int enemyTypeToSpawn = Random.Range(0, enemies.Length);
+	//		Debug.Log(theta);
+	//		float x = transform.position.x + radius * Mathf.Cos(theta * Mathf.Deg2Rad);
+	//		float y = transform.position.y + radius * Mathf.Sin(theta * Mathf.Deg2Rad);
 
-			Vector3 spawnLocation = new Vector3(x, y, 0.0f);
+	//		Vector3 spawnLocation = new Vector3(x, y, 0.0f);
 
-			//Instantiate(enemies[enemyTypeToSpawn], spawnLocation, Quaternion.identity);
-			Debug.DrawLine(transform.position, spawnLocation, Color.red, spawnRateInSeconds);
-		}
-	
-	}
+	//		//Instantiate(enemies[enemyTypeToSpawn], spawnLocation, Quaternion.identity);
+	//		Debug.DrawLine(transform.position, spawnLocation, Color.red, spawnRateInSeconds);
+	//	}
+	//}
 
 
 	public static GameManager instance
@@ -102,4 +149,5 @@ public class GameManager : MonoBehaviour {
 		get { return _instance; }
 		set { _instance = value; }
 	}
+
 }

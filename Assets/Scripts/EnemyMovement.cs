@@ -4,31 +4,18 @@ using System.Collections;
 public class EnemyMovement : characterTemplate {
 
 	//public enum EnemyType { Fire, Air, Earth, Water };
-	
 	public Transform target;
-	public float moveSpeed;
-	public float turnSpeed;
-	public float waveRadius;
-	Rigidbody rb;
+	public float predictiveScalar = 2;
     [SerializeField]
 	ElementalType.Element element;
 	//EnemyType type;
+	Vector3 goalPosition;
+	float timeAlive;
+	float moveSpeedActual;
 
 	void OnEnable()
 	{
-		
-	}
-
-	void Start ()
-	{
-		
-
-		if (!target)
-			target = GameObject.FindGameObjectWithTag("Player").transform;
-
-		rb = GetComponent<Rigidbody>();
-
-		int rando = Random.Range(0, 3);
+		int rando = Random.Range(0, 4);
 		switch (rando)
 		{
 			case 0:
@@ -43,7 +30,7 @@ public class EnemyMovement : characterTemplate {
 
 			case 2:
 				element = ElementalType.Element.Earth;
-				GetComponentInChildren<MeshRenderer>().material.color = Color.gray;
+				GetComponentInChildren<MeshRenderer>().material.color = Color.black;
 				break;
 
 			case 3:
@@ -52,12 +39,31 @@ public class EnemyMovement : characterTemplate {
 				break;
 		}
 
+		rb = GetComponent<Rigidbody>();
+		rb.velocity = Vector3.zero;
+		moveSpeedActual = moveSpeed;
+	}
+
+	void Start ()
+	{
+		if (!target)
+			target = GameObject.FindGameObjectWithTag("Player").transform;
+
+		rb = GetComponent<Rigidbody>();
+		moveSpeedActual = moveSpeed;
 		//Debug.Log(element.ToString());
 	}
 	
 	
 	void Update ()
 	{
+		// Track lifetime
+		timeAlive += Time.deltaTime;
+		moveSpeedActual += Time.deltaTime * Time.deltaTime;
+		//Debug.Log(moveSpeedActual);
+
+		// Track player, predict movement
+		goalPosition = target.GetComponent<Player>().GetPlayerFuturePos(predictiveScalar);
 		ChasePlayer();
 	}
 
@@ -65,14 +71,14 @@ public class EnemyMovement : characterTemplate {
 	void ChasePlayer()
 	{
 		// Rotate to Target
-		var dir = target.position - transform.position;
+		var dir = goalPosition - transform.position;
 		Quaternion rotToTarget = Quaternion.LookRotation(dir);
 		transform.rotation = Quaternion.Lerp(transform.rotation, 
 											 rotToTarget,
 											 Time.deltaTime * turnSpeed);
 
 		// Forward Propulsion
-		rb.velocity = transform.forward * moveSpeed;
+		rb.velocity = transform.forward * moveSpeedActual;
 	}
 
 
@@ -113,9 +119,8 @@ public class EnemyMovement : characterTemplate {
 				UI_Manager.UpdateComboPoints();
 				newWave.GetComponent<WaveForm>().SetElement(this.element);
 			}
-			Destroy(gameObject);
 
-			
+			gameObject.SetActive(false);
 		}
 	}
 
@@ -123,7 +128,7 @@ public class EnemyMovement : characterTemplate {
     {
         Debug.Log(this.gameObject.name + "hit by a " + c.gameObject.GetComponent<bulletTemplate>().elementType.ToString() + " element type");
         Debug.Log(this.gameObject.name + " element type: " + this.element.ToString());
-		if (ElementalType.GetCounterElement(this.element) == c.gameObject.GetComponent<bulletTemplate>().elementType)
+		if (this.element == c.gameObject.GetComponent<bulletTemplate>().elementType)
 		{
             Debug.Log("hueuhehu");
             Explode(true);
