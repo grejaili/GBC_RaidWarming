@@ -56,7 +56,7 @@ public class GameManager : MonoBehaviour {
 
 		if (timeSinceLastSpawn >= spawnRateInSeconds)
 		{
-			Debug.Log(timeSinceLastSpawn);
+			//Debug.Log(timeSinceLastSpawn);
 			timeSinceLastSpawn = 0.0f;
 			SpawnEnemy();
 
@@ -71,13 +71,13 @@ public class GameManager : MonoBehaviour {
 	{
 		float theta = Random.Range(0.0f, 360.0f);
 		int enemyTypeToSpawn = Random.Range(0, enemies.Length);
-		Debug.Log(theta);
+		//Debug.Log(theta);
 		float x = transform.position.x + radius * Mathf.Cos(theta * Mathf.Deg2Rad);
-		float y = transform.position.y + radius * Mathf.Sin(theta * Mathf.Deg2Rad);
+		float z = transform.position.z + radius * Mathf.Sin(theta * Mathf.Deg2Rad);
 
-		Vector3 spawnLocation = new Vector3(x, y, 0.0f);
+		Vector3 spawnLocation = new Vector3(x, 0.0f, z);
 
-		//Instantiate(enemies[enemyTypeToSpawn], spawnLocation, Quaternion.identity);
+		Instantiate(enemies[enemyTypeToSpawn], spawnLocation, Quaternion.identity);
 		Debug.DrawLine(transform.position, spawnLocation, Color.red, spawnRateInSeconds);
 	}
 
