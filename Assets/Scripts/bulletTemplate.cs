@@ -4,11 +4,11 @@ using UnityEngine;
 
 public class bulletTemplate : MonoBehaviour 
 {
-    [SerializeField]
     float speed = 50f;
+    Vector3 travelDirection;
 
     [SerializeField]
-    Vector3 travelDirection;
+    bulletsType bulletType;
 
 	// Use this for initialization
     public void StartBullet (Vector3 bulletDirection, float bulletSpeed = 50f) 
@@ -33,7 +33,7 @@ public class bulletTemplate : MonoBehaviour
 
         if(collision.gameObject.tag == "test")
         {
-            collision.gameObject.SendMessage("Explode");
+            collision.gameObject.SendMessage("Explode", bulletType);
         }
     }
 }

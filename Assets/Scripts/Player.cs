@@ -8,6 +8,7 @@ class bulletDetails
     public GameObject bulletPrefab;
     public float bulletSpeed = 50f;
     public float coolDown    = 0.3f;
+    public float bulletDestroyTime = 2f;
 }
     
 public enum bulletsType
@@ -59,12 +60,14 @@ public class Player : MonoBehaviour
         {
             GameObject bullet = (GameObject)Instantiate(this.bulletsType[(int)currentBulletType].bulletPrefab, 
                                                         bulletSpawn.transform.position, 
-                                                        Quaternion.identity);
+                                                        bulletSpawn.transform.rotation);
             
             bullet.GetComponent<bulletTemplate>().StartBullet(transform.forward, 
                                                               this.bulletsType[(int)currentBulletType].bulletSpeed);
 
             this.ableToShoot = false;
+
+            Destroy(bullet, this.bulletsType[(int)currentBulletType].bulletDestroyTime);
 
             StartCoroutine(shootBullet());
 
@@ -79,7 +82,7 @@ public class Player : MonoBehaviour
         RaycastHit hit; 
         if (Physics.Raycast(ray, out hit, 1000f, this.groundMasks))
         {
-            transform.LookAt(new Vector3(hit.point.x, hit.point.y, hit.point.z));
+            transform.LookAt(new Vector3(hit.point.x, transform.position.y, hit.point.z));
         }
 	}
 }

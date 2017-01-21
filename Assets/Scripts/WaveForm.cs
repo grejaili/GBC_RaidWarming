@@ -15,7 +15,9 @@ public class WaveForm : MonoBehaviour {
 
 	void Start ()
 	{
+
 		waveParticles.startSpeed = waveSpeed * lifeTime;
+
 		timer = killCheckInterval / 2;
 	}
 	
@@ -23,8 +25,9 @@ public class WaveForm : MonoBehaviour {
 	void Update ()
 	{
 		// Wave Propagation
+
 		waveSize = Mathf.Lerp(waveSize, waveRange, Time.deltaTime * (waveSpeed / 2));
-		Debug.DrawRay(transform.position, Vector3.forward * waveSize, Color.white);
+		//Debug.DrawRay(transform.position, Vector3.forward * waveSize, Color.white);
 
 		// Kill Check
 		timer += Time.deltaTime;
@@ -44,6 +47,7 @@ public class WaveForm : MonoBehaviour {
 		// Handle Lifespan
 		timeAlive += Time.deltaTime;
 		if (timeAlive >= lifeTime)
+
 		{
 			Debug.Log("/// timed out");
 			Destroy(gameObject);
