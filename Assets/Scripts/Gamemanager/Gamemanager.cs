@@ -4,8 +4,6 @@ using System.Collections.Generic;
 
 public class GameManager : MonoBehaviour {
 
-	//public List<GameObject> spawnPatterns = new List<GameObject>();
-	//GameObject activePattern;
 	public static GameManager _instance = null;
 
 	public float radius;
@@ -26,7 +24,6 @@ public class GameManager : MonoBehaviour {
 		}
 		else
 		{
-			// Assign GameManager to instance.
 			instance = this;
 
 			DontDestroyOnLoad(this);
@@ -42,11 +39,6 @@ public class GameManager : MonoBehaviour {
 			Debug.Log("Spawn rate not set in inspector, defaulting to 4.0f");
 			spawnRateInSeconds = 4.0f;
 		}
-
-		//activePattern = Instantiate(spawnPatterns[0], originPoint, Quaternion.identity) as GameObject;
-		//Debug.Log(activePattern);
-		// activePattern.GetComponent<EnemyPattern>().SpawnEnemies();
-
 	}
 
 	// Update is called once per frame
@@ -56,7 +48,7 @@ public class GameManager : MonoBehaviour {
 
 		if (timeSinceLastSpawn >= spawnRateInSeconds)
 		{
-			Debug.Log(timeSinceLastSpawn);
+			//Debug.Log(timeSinceLastSpawn);
 			timeSinceLastSpawn = 0.0f;
 			SpawnEnemy();
 
@@ -71,13 +63,13 @@ public class GameManager : MonoBehaviour {
 	{
 		float theta = Random.Range(0.0f, 360.0f);
 		int enemyTypeToSpawn = Random.Range(0, enemies.Length);
-		Debug.Log(theta);
+		//Debug.Log(theta);
 		float x = transform.position.x + radius * Mathf.Cos(theta * Mathf.Deg2Rad);
-		float y = transform.position.y + radius * Mathf.Sin(theta * Mathf.Deg2Rad);
+		float z = transform.position.z + radius * Mathf.Sin(theta * Mathf.Deg2Rad);
 
-		Vector3 spawnLocation = new Vector3(x, y, 0.0f);
+		Vector3 spawnLocation = new Vector3(x, 0.0f, z);
 
-		//Instantiate(enemies[enemyTypeToSpawn], spawnLocation, Quaternion.identity);
+		Instantiate(enemies[enemyTypeToSpawn], spawnLocation, Quaternion.identity);
 		Debug.DrawLine(transform.position, spawnLocation, Color.red, spawnRateInSeconds);
 	}
 
