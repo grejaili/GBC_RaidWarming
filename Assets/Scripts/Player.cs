@@ -20,7 +20,7 @@ public enum bulletsType
 	Water
 }
 
-public class Player : MonoBehaviour 
+public class Player : characterTemplate 
 {
     bool ableToShoot = true;
 
@@ -60,6 +60,12 @@ public class Player : MonoBehaviour
 
     void Update()
     {
+        if (!this.isAlive())
+        {
+            base.Explode();
+            return;
+        }
+
         if (Input.GetButton("Fire2") && ableToShoot)
         {
             GameObject bullet = (GameObject)Instantiate(this.bulletsType[(int)currentBulletType].bulletPrefab,  bulletSpawn.transform.position, bulletSpawn.transform.rotation);
@@ -70,20 +76,22 @@ public class Player : MonoBehaviour
             Destroy(bullet, this.bulletsType[(int)currentBulletType].bulletDestroyTime);
 
             StartCoroutine(shootBullet());
-
-            Debug.Log("Fire Bullet - "+currentBulletType);
         }
     }
 	
 	// Update is called once per frame
 	void LateUpdate () 
     {
-        
+        if (!this.isAlive())
+        {
+            base.Explode();
+            return;
+        }
+
         Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
         RaycastHit hit; 
         if (Physics.Raycast(ray, out hit, 1000f, this.groundMasks))
         {
-            Debug.Log("hello");
             transform.LookAt(new Vector3(hit.point.x, transform.position.y, hit.point.z));
         }
 	}

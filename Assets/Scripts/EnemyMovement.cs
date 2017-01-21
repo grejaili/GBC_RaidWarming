@@ -1,18 +1,15 @@
 ﻿using UnityEngine;
 using System.Collections;
 
-public class EnemyMovement : MonoBehaviour {
+public class EnemyMovement : characterTemplate {
 
 	//public enum EnemyType { Fire, Air, Earth, Water };
 	
 	public Transform target;
 	public float moveSpeed;
 	public float turnSpeed;
-	public float maxHealth;
 	public float waveRadius;
-	public GameObject Wave;
 	Rigidbody rb;
-	float health;
     [SerializeField]
 	ElementalType.Element element;
 	//EnemyType type;
@@ -30,7 +27,6 @@ public class EnemyMovement : MonoBehaviour {
 			target = GameObject.FindGameObjectWithTag("Player").transform;
 
 		rb = GetComponent<Rigidbody>();
-		health = maxHealth;
 
 		int rando = Random.Range(0, 3);
 		switch (rando)
