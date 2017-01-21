@@ -58,11 +58,8 @@ public class EnemyMovement : MonoBehaviour {
 
 	void OnCollisionEnter(Collision c)
 	{
-		switch(c.gameObject.tag)
-		{
-			case "Player":	Explode(); break;
-			case "Wave":	Explode(); break;
-		}
+		if (c.transform.tag != "Enemy")
+			Explode();
 	}
 
 
