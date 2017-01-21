@@ -4,15 +4,14 @@ using System.Collections;
 public class EnemyMovement : characterTemplate {
 
 	//public enum EnemyType { Fire, Air, Earth, Water };
-	
 	public Transform target;
-	public float moveSpeed;
-	public float turnSpeed;
-	public float waveRadius;
-	Rigidbody rb;
+	public float predictiveScalar = 2;
     [SerializeField]
 	ElementalType.Element element;
 	//EnemyType type;
+	Vector3 goalPosition;
+	float timeAlive;
+	float moveSpeedActual;
 
 	void OnEnable()
 	{
@@ -42,6 +41,7 @@ public class EnemyMovement : characterTemplate {
 
 		rb = GetComponent<Rigidbody>();
 		rb.velocity = Vector3.zero;
+		moveSpeedActual = moveSpeed;
 	}
 
 	void Start ()
@@ -50,12 +50,20 @@ public class EnemyMovement : characterTemplate {
 			target = GameObject.FindGameObjectWithTag("Player").transform;
 
 		rb = GetComponent<Rigidbody>();
+		moveSpeedActual = moveSpeed;
 		//Debug.Log(element.ToString());
 	}
 	
 	
 	void Update ()
 	{
+		// Track lifetime
+		timeAlive += Time.deltaTime;
+		moveSpeedActual += Time.deltaTime * Time.deltaTime;
+		//Debug.Log(moveSpeedActual);
+
+		// Track player, predict movement
+		goalPosition = target.GetComponent<Player>().GetPlayerFuturePos(predictiveScalar);
 		ChasePlayer();
 	}
 
@@ -63,14 +71,14 @@ public class EnemyMovement : characterTemplate {
 	void ChasePlayer()
 	{
 		// Rotate to Target
-		var dir = target.position - transform.position;
+		var dir = goalPosition - transform.position;
 		Quaternion rotToTarget = Quaternion.LookRotation(dir);
 		transform.rotation = Quaternion.Lerp(transform.rotation, 
 											 rotToTarget,
 											 Time.deltaTime * turnSpeed);
 
 		// Forward Propulsion
-		rb.velocity = transform.forward * moveSpeed;
+		rb.velocity = transform.forward * moveSpeedActual;
 	}
 
 

@@ -11,7 +11,6 @@ class bulletDetails
     public float bulletDestroyTime = 2f;
 }
 
-    
 public enum bulletsType
 {
 	Fire,
@@ -24,7 +23,16 @@ public class Player : characterTemplate
 {
     bool ableToShoot = true;
 
-    [SerializeField]
+	public Vector3 GetPlayerFuturePos(float scalar)
+	{
+		return transform.position + rb.velocity * scalar;
+	}
+	public Vector3 GetPlayerFuturePos()
+	{
+		return transform.position + rb.velocity;
+	}
+
+	[SerializeField]
     LayerMask groundMasks;
 
     [SerializeField]
@@ -46,8 +54,8 @@ public class Player : characterTemplate
 
 	// Use this for initialization
 	void Start () {
-		
 
+		rb = GetComponent<Rigidbody>();
 
 	}
 
@@ -66,10 +74,14 @@ public class Player : characterTemplate
             return;
         }
 
+		// Moving
+		PlayerPilot();
+
+		// Shooting
         if (Input.GetButton("Fire2") && ableToShoot)
         {
             GameObject bullet = (GameObject)Instantiate(this.bulletsType[(int)currentBulletType].bulletPrefab,  bulletSpawn.transform.position, bulletSpawn.transform.rotation);
-            bullet.GetComponent<bulletTemplate>().StartBullet(transform.forward,   this.bulletsType[(int)currentBulletType].bulletSpeed);
+            bullet.GetComponent<bulletTemplate>().StartBullet(transform.forward, this.bulletsType[(int)currentBulletType].bulletSpeed);
 
             this.ableToShoot = false;
 
@@ -95,4 +107,15 @@ public class Player : characterTemplate
             transform.LookAt(new Vector3(hit.point.x, transform.position.y, hit.point.z));
         }
 	}
+
+	void PlayerPilot()
+	{
+		float forward = Input.GetAxis("Vertical");
+		float lateral = Input.GetAxis("Horizontal");
+
+		Vector3 forwardVector = Vector3.forward * moveSpeed * forward;
+		Vector3 lateralVector = Vector3.right * moveSpeed * lateral;
+		rb.velocity = forwardVector + lateralVector;
+	}
+
 }
