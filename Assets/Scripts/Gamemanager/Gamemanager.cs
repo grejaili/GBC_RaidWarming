@@ -4,8 +4,6 @@ using System.Collections.Generic;
 
 public class GameManager : MonoBehaviour {
 
-	//public List<GameObject> spawnPatterns = new List<GameObject>();
-	//GameObject activePattern;
 	public static GameManager _instance = null;
 
 	public float radius;
@@ -26,7 +24,6 @@ public class GameManager : MonoBehaviour {
 		}
 		else
 		{
-			// Assign GameManager to instance.
 			instance = this;
 
 			DontDestroyOnLoad(this);
@@ -42,11 +39,6 @@ public class GameManager : MonoBehaviour {
 			Debug.Log("Spawn rate not set in inspector, defaulting to 4.0f");
 			spawnRateInSeconds = 4.0f;
 		}
-
-		//activePattern = Instantiate(spawnPatterns[0], originPoint, Quaternion.identity) as GameObject;
-		//Debug.Log(activePattern);
-		// activePattern.GetComponent<EnemyPattern>().SpawnEnemies();
-
 	}
 
 	// Update is called once per frame
