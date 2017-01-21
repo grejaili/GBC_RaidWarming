@@ -2,10 +2,12 @@
 using System.Collections;
 using System.Collections.Generic;
 
-public class Gamemanager : MonoBehaviour {
+public class GameManager : MonoBehaviour {
 
 	//public List<GameObject> spawnPatterns = new List<GameObject>();
 	//GameObject activePattern;
+	public static GameManager _instance = null;
+
 	public float radius;
 	public float spawnRateInSeconds;
 	public GameObject[] enemies;
@@ -17,6 +19,19 @@ public class Gamemanager : MonoBehaviour {
 	// Use this for initialization
 	void Start ()
 	{
+		// Checks if a GameManager exists, and destroys the second copy.
+		if (instance)
+		{
+			DestroyImmediate(gameObject);
+		}
+		else
+		{
+			// Assign GameManager to instance.
+			instance = this;
+
+			DontDestroyOnLoad(this);
+		}
+
 		if (radius == 0.0f)
 		{
 			Debug.Log("Radius not set in inspector, defaulting to 4.0f");
@@ -87,5 +102,12 @@ public class Gamemanager : MonoBehaviour {
 			Debug.DrawLine(transform.position, spawnLocation, Color.red, spawnRateInSeconds);
 		}
 	
+	}
+
+
+	public static GameManager instance
+	{
+		get { return _instance; }
+		set { _instance = value; }
 	}
 }
