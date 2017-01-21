@@ -10,13 +10,21 @@ public class UI_Manager : MonoBehaviour {
     GameObject comboPointsText;
     int comboCounter=0;
 
-
+	GameObject[] HUD_Skills = new GameObject[4];
 
 	// Use this for initialization
 	void Start () {
         player = GameObject.FindGameObjectWithTag("Player").GetComponent<Player>();
-       // comboPointsText = GameObject.FindGameObjectWithTag("ComboPointText");  	
-	}
+
+		for (int i = 0; i < HUD_Skills.Length; i++)
+		{
+			HUD_Skills[i] = GameObject.Find("HUD_" + ((ElementalType.Element)i).ToString());
+			HUD_Skills[i].GetComponentInChildren<Text>().text = ((ElementalType.Element)i).ToString();
+			//Debug.Log(((ElementalType.Element)i).ToString());
+		}
+		
+       // comboPointsText = GameObject.FindGameObjectWithTag("ComboPointText");  
+	   }
 	
     public void Shoot()
     {
@@ -37,7 +45,7 @@ public class UI_Manager : MonoBehaviour {
         }
     }
 
-    public  void UpdateComboPoints()
+    public void UpdateComboPoints()
     {
 
         comboCounter += 1;
@@ -46,7 +54,7 @@ public class UI_Manager : MonoBehaviour {
 
     public void SelectSkillOne()
     {
-        player.currentBulletType = bulletsType.Water;
+        //player.currentBulletType = ;
         Debug.Log("SKill ONe");
        
     }
@@ -69,9 +77,20 @@ public class UI_Manager : MonoBehaviour {
 
     public void SelectSkillFour()
     {
-        player.currentBulletType = bulletsType.Wind;
+        player.currentBulletType = bulletsType.Air;
         Debug.Log("SKill Four");
 
     }
+	// Workaround for unity's inspector not allowing enums as parameters for a function call...
+	// 0 = Fire, 1 = Earth, 2 = Air , 3 = Water
+	public void SetBulletType (int newType)
+	{
+		SetBulletType((ElementalType.Element)newType);
+	}
 
+	public void SetBulletType (ElementalType.Element newType)
+	{
+		player.currentBulletType = (bulletsType)newType;
+		Debug.Log("Player's current bullet type: " + player.currentBulletType.ToString());
+	}
 }

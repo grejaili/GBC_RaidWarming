@@ -14,11 +14,10 @@ class bulletDetails
     
 public enum bulletsType
 {
-    //Normal,
-    Fire,
-    Earth,
-    Wind,
-    Water,
+	Fire,
+	Earth,
+	Air,
+	Water
 }
 
 public class Player : MonoBehaviour 
@@ -34,6 +33,8 @@ public class Player : MonoBehaviour
     [SerializeField]
     bulletsType m_currentBulletType;
 
+	//ElementalType.Element bulletType;
+
     public bulletsType currentBulletType
     {
         get {return m_currentBulletType; }
@@ -46,6 +47,8 @@ public class Player : MonoBehaviour
 	// Use this for initialization
 	void Start () {
 		
+
+
 	}
 
     IEnumerator shootBullet()

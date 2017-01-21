@@ -3,7 +3,8 @@ using System.Collections;
 
 public class EnemyMovement : MonoBehaviour {
 
-	public enum EnemyType { Fire, Air, Earth, Water };
+	//public enum EnemyType { Fire, Air, Earth, Water };
+	
 	public Transform target;
 	public float moveSpeed;
 	public float turnSpeed;
@@ -13,28 +14,49 @@ public class EnemyMovement : MonoBehaviour {
 	Rigidbody rb;
 	float health;
     [SerializeField]
-    EnemyType type;
-	
+	ElementalType.Element element;
+	//EnemyType type;
+
 	void OnEnable()
 	{
-		int rando = Random.Range(0, 3);
-		switch (rando)
-		{
-			case 0: type = EnemyType.Fire; break;
-			case 1: type = EnemyType.Air; break;
-			case 2: type = EnemyType.Earth; break;
-			case 3: type = EnemyType.Water; break;
-		}
+		
 	}
 
 	void Start ()
 	{
-     
+		
+
 		if (!target)
 			target = GameObject.FindGameObjectWithTag("Player").transform;
 
 		rb = GetComponent<Rigidbody>();
 		health = maxHealth;
+
+		int rando = Random.Range(0, 3);
+		switch (rando)
+		{
+			case 0:
+				element = ElementalType.Element.Fire;
+				GetComponentInChildren<MeshRenderer>().material.color = Color.red;
+				break;
+
+			case 1:
+				element = ElementalType.Element.Air;
+				GetComponentInChildren<MeshRenderer>().material.color = Color.white;
+				break;
+
+			case 2:
+				element = ElementalType.Element.Earth;
+				GetComponentInChildren<MeshRenderer>().material.color = Color.gray;
+				break;
+
+			case 3:
+				element = ElementalType.Element.Water;
+				GetComponentInChildren<MeshRenderer>().material.color = Color.blue;
+				break;
+		}
+
+		//Debug.Log(element.ToString());
 	}
 	
 	
@@ -64,7 +86,7 @@ public class EnemyMovement : MonoBehaviour {
 		{
 			case "Player":	Explode(); break;
 			case "Wave":	Explode(); break;
-            case "Bullet":  checkType( c); break;
+            case "Bullet":  checkType(c.gameObject); break;
 		}
 	}
 
@@ -80,12 +102,12 @@ public class EnemyMovement : MonoBehaviour {
 		}
 	}
 
-    public void checkType(Collision c)
+    public void checkType(GameObject c)
     {
-        Debug.Log(c.gameObject.GetComponent<bulletTemplate>().bulletType.ToString());
-        Debug.Log(this.type.ToString());
-       if (c.gameObject.GetComponent<bulletTemplate>().bulletType.ToString() == this.type.ToString())
-        {
+        Debug.Log(this.gameObject.name + "hit by a " + c.gameObject.GetComponent<bulletTemplate>().elementType.ToString() + " element type");
+        Debug.Log(this.gameObject.name + " element type: " + this.element.ToString());
+		if (ElementalType.GetCounterElement(this.element) == c.gameObject.GetComponent<bulletTemplate>().elementType)
+		{
             Debug.Log("hueuhehu");
             Explode();
         }

@@ -3,6 +3,10 @@ using System.Collections;
 
 public class WaveForm : MonoBehaviour {
 
+	//EnemyMovement.EnemyType type;
+
+	ElementalType type;
+
 	public float lifeTime = 2.0f;
 	public float waveSpeed = 1.0f;
 	public float waveRange = 1.0f;
@@ -15,7 +19,6 @@ public class WaveForm : MonoBehaviour {
 
 	void Start ()
 	{
-
 		waveParticles.startSpeed = waveSpeed * lifeTime;
 
 		timer = killCheckInterval / 2;
@@ -36,9 +39,9 @@ public class WaveForm : MonoBehaviour {
 			Collider[] cols = Physics.OverlapSphere(transform.position, waveSize);
 			foreach (Collider c in cols)
 			{
-				if (c.GetComponentInParent<EnemyMovement>())
+				if (c.GetComponentInParent<EnemyMovement>() && c.GetComponentInParent<ElementalType>())
 				{
-					c.gameObject.GetComponentInParent<EnemyMovement>().Explode();
+					//c.gameObject.GetComponentInParent<ElementalType>().GetCounterElement(type.GetType);
 				}
 			}
 			timer = 0.0f;
@@ -58,5 +61,10 @@ public class WaveForm : MonoBehaviour {
 			Debug.Log("/// wave ranged out");
 			Destroy(gameObject);
 		}
+	}
+
+	public void SetElement(ElementalType.Element newType)
+	{
+		//type = newType;
 	}
 }
