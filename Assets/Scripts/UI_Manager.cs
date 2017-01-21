@@ -5,17 +5,37 @@ using UnityEngine.UI;
 
 public class UI_Manager : MonoBehaviour {
 
-    Player player;
-    bool paused;
-    GameObject comboPointsText;
-    int comboCounter=0;
+	public uint specialThreshold;
+	private int comboCounter = 0;
+	private bool paused;
 
-	GameObject[] HUD_Skills = new GameObject[4];
+	private Player player;
+	private GameObject HUD_ComboCounter;
+	private GameObject[] HUD_Skills = new GameObject[4];
+
+	public static UI_Manager _instance = null;
+	public static UI_Manager instance
+	{
+		get { return _instance; }
+		set { _instance = value; }
+	}
 
 	// Use this for initialization
 	void Start () {
-        player = GameObject.FindGameObjectWithTag("Player").GetComponent<Player>();
+		if (instance)
+		{
+			DestroyImmediate(gameObject);
+		}
+		else
+		{
+			instance = this;
 
+			DontDestroyOnLoad(this);
+		}
+
+		player = GameObject.FindGameObjectWithTag("Player").GetComponent<Player>();
+		HUD_ComboCounter = GameObject.Find("HUD_Combo");
+		HUD_ComboCounter.GetComponent<Text>().text = "";
 		for (int i = 0; i < HUD_Skills.Length; i++)
 		{
 			HUD_Skills[i] = GameObject.Find("HUD_" + ((ElementalType.Element)i).ToString());
@@ -23,6 +43,11 @@ public class UI_Manager : MonoBehaviour {
 			//Debug.Log(((ElementalType.Element)i).ToString());
 		}
 		
+		if(specialThreshold == 0)
+		{
+			Debug.Log("specialThreshold not set in inspector, defaulting to 6");
+			specialThreshold = 6;
+		}
        // comboPointsText = GameObject.FindGameObjectWithTag("ComboPointText");  
 	   }
 	
@@ -45,14 +70,28 @@ public class UI_Manager : MonoBehaviour {
         }
     }
 
-    public void UpdateComboPoints()
+    public static void UpdateComboPoints()
     {
-
-        comboCounter += 1;
-        comboPointsText.GetComponent<Text>().text = comboCounter.ToString();
+		if (instance && instance.HUD_ComboCounter.GetComponent<Text>())
+		{
+			string comboStatus = " Hit Combo!";
+			instance.comboCounter += 1;
+			instance.HUD_ComboCounter.GetComponent<Text>().text = instance.comboCounter.ToString() + comboStatus;
+		}
+		if (instance.comboCounter % instance.specialThreshold == 0)
+		{
+			Debug.Log("Some kinda special shit should happen.");
+		}
     }
 
-    public void SelectSkillOne()
+	public static void ResetComboPoints()
+	{
+		instance.HUD_ComboCounter.GetComponent<Text>().text = "";
+		instance.comboCounter = 0;
+	}
+
+
+	public void SelectSkillOne()
     {
         //player.currentBulletType = ;
         Debug.Log("SKill ONe");

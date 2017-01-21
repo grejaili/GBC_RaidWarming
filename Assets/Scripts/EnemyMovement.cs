@@ -84,21 +84,42 @@ public class EnemyMovement : MonoBehaviour {
 	{
 		switch(c.gameObject.tag)
 		{
-			case "Player":	Explode(); break;
-			case "Wave":	Explode(); break;
-            case "Bullet":  checkType(c.gameObject); break;
+			case "Player":
+				Explode(false);
+				UI_Manager.ResetComboPoints();
+				break;
+			case "Wave":
+				Explode(true);
+				break;
+            case "Bullet":
+				checkType(c.gameObject);
+				break;
 		}
 	}
 
+	void OnDisable()
+	{
+		
+	}
 
-	public void Explode()
+	public void Explode(bool destroyedByPlayer)
 	{
 		GameObject newWave = (GameObject)Instantiate(Wave, 
 								transform.position + Vector3.up * (transform.localScale.y / 2),
 								Quaternion.identity);
 		if (newWave)
 		{
+			newWave.GetComponent<WaveForm>().destroyedByPlayer = destroyedByPlayer;
+
+			//Debug.Log(this.gameObject.name + " element: " + this.element.ToString());
+			if(destroyedByPlayer)
+			{
+				UI_Manager.UpdateComboPoints();
+				newWave.GetComponent<WaveForm>().SetElement(this.element);
+			}
 			Destroy(gameObject);
+
+			
 		}
 	}
 
@@ -109,7 +130,14 @@ public class EnemyMovement : MonoBehaviour {
 		if (ElementalType.GetCounterElement(this.element) == c.gameObject.GetComponent<bulletTemplate>().elementType)
 		{
             Debug.Log("hueuhehu");
-            Explode();
+            Explode(true);
         }
     }
+
+	public new ElementalType.Element GetType()
+	{
+		return element;
+	}
+
+
 }
