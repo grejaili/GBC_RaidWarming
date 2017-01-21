@@ -10,6 +10,7 @@ ExportedObj/
 .consulo/
 *.csproj
 *.unityproj
+*.VC.db
 *.sln
 *.suo
 *.tmp
