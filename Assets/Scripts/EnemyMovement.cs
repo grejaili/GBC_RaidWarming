@@ -58,7 +58,7 @@ public class EnemyMovement : MonoBehaviour {
 
 	void OnCollisionEnter(Collision c)
 	{
-		if (c.transform.tag != "Enemy")
+		if (c.transform.tag == "Player")
 			Explode();
 	}
 

@@ -24,7 +24,7 @@ public class WaveForm : MonoBehaviour {
 	{
 		// Wave Propagation
 		waveSize = Mathf.Lerp(waveSize, waveRange, Time.deltaTime * (waveSpeed / 2));
-		Debug.DrawRay(transform.position, Vector3.forward * waveSize, Color.white);
+		//Debug.DrawRay(transform.position, Vector3.forward * waveSize, Color.white);
 
 		// Kill Check
 		timer += Time.deltaTime;
@@ -51,7 +51,7 @@ public class WaveForm : MonoBehaviour {
 
 		if (waveSize >= waveRange - 0.5f)
 		{
-			Debug.Log("/// wave ranged out");
+			//Debug.Log("/// wave ranged out");
 			Destroy(gameObject);
 		}
 	}

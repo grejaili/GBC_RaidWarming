@@ -78,7 +78,7 @@ public class GameManager : MonoBehaviour {
 		Vector3 spawnLocation = new Vector3(x, 0.0f, z);
 
 		Instantiate(enemies[enemyTypeToSpawn], spawnLocation, Quaternion.identity);
-		Debug.DrawLine(transform.position, spawnLocation, Color.red, spawnRateInSeconds);
+		//Debug.DrawLine(transform.position, spawnLocation, Color.red, spawnRateInSeconds);
 	}
 
 	/// <summary>
