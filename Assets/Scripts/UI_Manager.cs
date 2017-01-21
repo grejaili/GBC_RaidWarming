@@ -21,7 +21,8 @@ public class UI_Manager : MonoBehaviour {
 	}
 
 	// Use this for initialization
-	void Start () {
+	void Start ()
+	{
 		if (instance)
 		{
 			DestroyImmediate(gameObject);

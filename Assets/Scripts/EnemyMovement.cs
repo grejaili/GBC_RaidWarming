@@ -16,18 +16,6 @@ public class EnemyMovement : characterTemplate {
 
 	void OnEnable()
 	{
-		
-	}
-
-	void Start ()
-	{
-		
-
-		if (!target)
-			target = GameObject.FindGameObjectWithTag("Player").transform;
-
-		rb = GetComponent<Rigidbody>();
-
 		int rando = Random.Range(0, 3);
 		switch (rando)
 		{
@@ -52,6 +40,15 @@ public class EnemyMovement : characterTemplate {
 				break;
 		}
 
+		rb.velocity = Vector3.zero;
+	}
+
+	void Start ()
+	{
+		if (!target)
+			target = GameObject.FindGameObjectWithTag("Player").transform;
+
+		rb = GetComponent<Rigidbody>();
 		//Debug.Log(element.ToString());
 	}
 	
@@ -113,9 +110,8 @@ public class EnemyMovement : characterTemplate {
 				UI_Manager.UpdateComboPoints();
 				newWave.GetComponent<WaveForm>().SetElement(this.element);
 			}
-			Destroy(gameObject);
 
-			
+			gameObject.SetActive(false);
 		}
 	}
 
