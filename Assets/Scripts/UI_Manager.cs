@@ -12,6 +12,7 @@ public class UI_Manager : MonoBehaviour {
 	private Player player;
 	private GameObject HUD_ComboCounter;
 	private GameObject[] HUD_Skills = new GameObject[4];
+	private GameObject[] HUD_AmmoTypeIndicator = new GameObject[4];
 
 	public static UI_Manager _instance = null;
 	public static UI_Manager instance
@@ -38,12 +39,19 @@ public class UI_Manager : MonoBehaviour {
 		HUD_ComboCounter.GetComponent<Text>().text = "";
 		for (int i = 0; i < HUD_Skills.Length; i++)
 		{
-			HUD_Skills[i] = GameObject.Find("HUD_" + ((ElementalType.Element)i).ToString());
+			HUD_Skills[i] = GameObject.Find("HUD_Button_" + ((ElementalType.Element)i).ToString());
 			HUD_Skills[i].GetComponentInChildren<Text>().text = ((ElementalType.Element)i).ToString();
 			//Debug.Log(((ElementalType.Element)i).ToString());
 		}
-		
-		if(specialThreshold == 0)
+
+		for (int i = 0; i < HUD_AmmoTypeIndicator.Length; i++)
+		{
+			HUD_AmmoTypeIndicator[i] = GameObject.Find("HUD_AmmoIndicator_" + ((ElementalType.Element)i).ToString());
+			//HUD_Skills[i].GetComponentInChildren<Text>().text = ((ElementalType.Element)i).ToString();
+			//Debug.Log(((ElementalType.Element)i).ToString());
+		}
+
+		if (specialThreshold == 0)
 		{
 			Debug.Log("specialThreshold not set in inspector, defaulting to 6");
 			specialThreshold = 6;
@@ -124,7 +132,19 @@ public class UI_Manager : MonoBehaviour {
 	// 0 = Fire, 1 = Earth, 2 = Air , 3 = Water
 	public void SetBulletType (int newType)
 	{
+		Color transparent = Color.white;
+		transparent.a = 0.3f;
 		SetBulletType((ElementalType.Element)newType);
+		for (int i = 0; i < HUD_AmmoTypeIndicator.Length; i++)
+		{
+			if (i == newType)
+			{
+				HUD_AmmoTypeIndicator[i].GetComponent<Image>().color = Color.white;
+			}
+			else
+				HUD_AmmoTypeIndicator[i].GetComponent<Image>().color = transparent;
+		}
+
 	}
 
 	public void SetBulletType (ElementalType.Element newType)

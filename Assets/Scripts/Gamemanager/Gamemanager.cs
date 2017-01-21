@@ -54,6 +54,23 @@ public class GameManager : MonoBehaviour {
 
 		}
 
+
+		if(Input.GetKeyDown(KeyCode.Alpha1))
+		{
+			UI_Manager.instance.SetBulletType(0);
+		}
+		if (Input.GetKeyDown(KeyCode.Alpha2))
+		{
+			UI_Manager.instance.SetBulletType(1);
+		}
+		if (Input.GetKeyDown(KeyCode.Alpha3))
+		{
+			UI_Manager.instance.SetBulletType(2);
+		}
+		if (Input.GetKeyDown(KeyCode.Alpha4))
+		{
+			UI_Manager.instance.SetBulletType(3);
+		}
 	}
 	
 	/// <summary>
