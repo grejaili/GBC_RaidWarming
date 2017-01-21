@@ -5,7 +5,7 @@ using UnityEngine.UI;
 
 public class UI_Manager : MonoBehaviour {
 
-    //Player player = new player;
+    Player player;
     bool paused;
     GameObject comboPointsText;
     int comboCounter=0;
@@ -14,8 +14,8 @@ public class UI_Manager : MonoBehaviour {
 
 	// Use this for initialization
 	void Start () {
-        //player = Gameobject.FindGameObjectWithTag("Player");
-        comboPointsText = GameObject.FindGameObjectWithTag("ComboPointText");  	
+        player = GameObject.FindGameObjectWithTag("Player").GetComponent<Player>();
+       // comboPointsText = GameObject.FindGameObjectWithTag("ComboPointText");  	
 	}
 	
     public void Shoot()
@@ -46,12 +46,14 @@ public class UI_Manager : MonoBehaviour {
 
     public void SelectSkillOne()
     {
+        player.currentBulletType = bulletsType.Water;
         Debug.Log("SKill ONe");
        
     }
 
     public void SelectSkillTwo()
     {
+        player.currentBulletType = bulletsType.Earth;
         Debug.Log("SKill two");
 
     }
@@ -59,6 +61,7 @@ public class UI_Manager : MonoBehaviour {
 
     public void SelectSkillThree()
     {
+        player.currentBulletType = bulletsType.Fire;
         Debug.Log("SKill three");
 
     }
@@ -66,7 +69,8 @@ public class UI_Manager : MonoBehaviour {
 
     public void SelectSkillFour()
     {
-        Debug.Log("SKill ONe");
+        player.currentBulletType = bulletsType.Wind;
+        Debug.Log("SKill Four");
 
     }
 

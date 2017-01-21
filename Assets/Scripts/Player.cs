@@ -10,14 +10,15 @@ class bulletDetails
     public float coolDown    = 0.3f;
     public float bulletDestroyTime = 2f;
 }
+
     
 public enum bulletsType
 {
-    normal,
-    fire,
-    earth,
-    wind,
-    water,
+    //Normal,
+    Fire,
+    Earth,
+    Wind,
+    Water,
 }
 
 public class Player : MonoBehaviour 
@@ -56,14 +57,10 @@ public class Player : MonoBehaviour
 
     void Update()
     {
-        if (Input.GetButton("Fire1") && ableToShoot)
+        if (Input.GetButton("Fire2") && ableToShoot)
         {
-            GameObject bullet = (GameObject)Instantiate(this.bulletsType[(int)currentBulletType].bulletPrefab, 
-                                                        bulletSpawn.transform.position, 
-                                                        bulletSpawn.transform.rotation);
-            
-            bullet.GetComponent<bulletTemplate>().StartBullet(transform.forward, 
-                                                              this.bulletsType[(int)currentBulletType].bulletSpeed);
+            GameObject bullet = (GameObject)Instantiate(this.bulletsType[(int)currentBulletType].bulletPrefab,  bulletSpawn.transform.position, bulletSpawn.transform.rotation);
+            bullet.GetComponent<bulletTemplate>().StartBullet(transform.forward,   this.bulletsType[(int)currentBulletType].bulletSpeed);
 
             this.ableToShoot = false;
 
@@ -78,10 +75,12 @@ public class Player : MonoBehaviour
 	// Update is called once per frame
 	void LateUpdate () 
     {
+        
         Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
         RaycastHit hit; 
         if (Physics.Raycast(ray, out hit, 1000f, this.groundMasks))
         {
+            Debug.Log("hello");
             transform.LookAt(new Vector3(hit.point.x, transform.position.y, hit.point.z));
         }
 	}

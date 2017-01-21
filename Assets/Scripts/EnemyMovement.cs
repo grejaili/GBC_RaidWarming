@@ -12,7 +12,8 @@ public class EnemyMovement : MonoBehaviour {
 	public GameObject Wave;
 	Rigidbody rb;
 	float health;
-	EnemyType type;
+    [SerializeField]
+    EnemyType type;
 	
 	void OnEnable()
 	{
@@ -28,6 +29,7 @@ public class EnemyMovement : MonoBehaviour {
 
 	void Start ()
 	{
+     
 		if (!target)
 			target = GameObject.FindGameObjectWithTag("Player").transform;
 
@@ -62,6 +64,7 @@ public class EnemyMovement : MonoBehaviour {
 		{
 			case "Player":	Explode(); break;
 			case "Wave":	Explode(); break;
+            case "Bullet":  checkType( c); break;
 		}
 	}
 
@@ -76,4 +79,15 @@ public class EnemyMovement : MonoBehaviour {
 			Destroy(gameObject);
 		}
 	}
+
+    public void checkType(Collision c)
+    {
+        Debug.Log(c.gameObject.GetComponent<bulletTemplate>().bulletType.ToString());
+        Debug.Log(this.type.ToString());
+       if (c.gameObject.GetComponent<bulletTemplate>().bulletType.ToString() == this.type.ToString())
+        {
+            Debug.Log("hueuhehu");
+            Explode();
+        }
+    }
 }

@@ -8,7 +8,14 @@ public class bulletTemplate : MonoBehaviour
     Vector3 travelDirection;
 
     [SerializeField]
-    bulletsType bulletType;
+
+    bulletsType m_bulletType;
+
+   public bulletsType bulletType
+     {
+        get {return m_bulletType; }
+        set {this.m_bulletType = value; }
+    }
 
 	// Use this for initialization
     public void StartBullet (Vector3 bulletDirection, float bulletSpeed = 50f) 
@@ -36,4 +43,6 @@ public class bulletTemplate : MonoBehaviour
             collision.gameObject.SendMessage("Explode", bulletType);
         }
     }
+
+   
 }
