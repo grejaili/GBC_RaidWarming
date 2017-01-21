@@ -82,7 +82,7 @@ public class Player : MonoBehaviour
         RaycastHit hit; 
         if (Physics.Raycast(ray, out hit, 1000f, this.groundMasks))
         {
-            transform.LookAt(new Vector3(hit.point.x, hit.point.y, hit.point.z));
+            transform.LookAt(new Vector3(hit.point.x, transform.position.y, hit.point.z));
         }
 	}
 }
