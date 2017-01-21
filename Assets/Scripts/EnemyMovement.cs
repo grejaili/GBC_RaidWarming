@@ -16,7 +16,7 @@ public class EnemyMovement : characterTemplate {
 
 	void OnEnable()
 	{
-		int rando = Random.Range(0, 3);
+		int rando = Random.Range(0, 4);
 		switch (rando)
 		{
 			case 0:
@@ -31,7 +31,7 @@ public class EnemyMovement : characterTemplate {
 
 			case 2:
 				element = ElementalType.Element.Earth;
-				GetComponentInChildren<MeshRenderer>().material.color = Color.gray;
+				GetComponentInChildren<MeshRenderer>().material.color = Color.black;
 				break;
 
 			case 3:
@@ -40,6 +40,7 @@ public class EnemyMovement : characterTemplate {
 				break;
 		}
 
+		rb = GetComponent<Rigidbody>();
 		rb.velocity = Vector3.zero;
 	}
 
@@ -119,7 +120,7 @@ public class EnemyMovement : characterTemplate {
     {
         Debug.Log(this.gameObject.name + "hit by a " + c.gameObject.GetComponent<bulletTemplate>().elementType.ToString() + " element type");
         Debug.Log(this.gameObject.name + " element type: " + this.element.ToString());
-		if (ElementalType.GetCounterElement(this.element) == c.gameObject.GetComponent<bulletTemplate>().elementType)
+		if (this.element == c.gameObject.GetComponent<bulletTemplate>().elementType)
 		{
             Debug.Log("hueuhehu");
             Explode(true);

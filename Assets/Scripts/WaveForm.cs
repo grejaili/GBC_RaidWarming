@@ -32,6 +32,9 @@ public class WaveForm : MonoBehaviour {
 		// Wave Propagation
 		waveSize = Mathf.Lerp(waveSize, waveRange, Time.deltaTime * (waveSpeed / 2));
 		//Debug.DrawRay(transform.position, Vector3.forward * waveSize, Color.white);
+		//Debug.DrawRay(transform.position, Vector3.right * waveSize, Color.white);
+		//Debug.DrawRay(transform.position, -Vector3.forward * waveSize, Color.white);
+		//Debug.DrawRay(transform.position, -Vector3.right * waveSize, Color.white);
 
 		if (destroyedByPlayer)
 		{
@@ -44,7 +47,7 @@ public class WaveForm : MonoBehaviour {
 				{
 					if (c.GetComponentInParent<EnemyMovement>())
 					{
-						if (ElementalType.GetCounterElement(c.GetComponentInParent<EnemyMovement>().GetType()) == this.elementalType)
+						if (c.gameObject.GetComponentInParent<EnemyMovement>().GetType() == this.elementalType)
 						{
 							c.GetComponentInParent<EnemyMovement>().Explode(true);
 						}
@@ -60,13 +63,15 @@ public class WaveForm : MonoBehaviour {
 		if (timeAlive >= lifeTime)
 		{
 			//Debug.Log("/// timed out");
-			gameObject.SetActive(false);
+			//gameObject.SetActive(false);
+			Destroy(gameObject);
 		}
 
 		if (waveSize >= waveRange - 0.5f)
 		{
 			//Debug.Log("/// wave ranged out");
-			gameObject.SetActive(false);
+			//gameObject.SetActive(false);
+			Destroy(gameObject);
 		}
 	}
 
