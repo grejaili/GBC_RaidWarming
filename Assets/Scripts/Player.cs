@@ -8,22 +8,31 @@ class bulletDetails
     public GameObject bulletPrefab;
     public float bulletSpeed = 50f;
     public float coolDown    = 0.3f;
-}
-    
-public enum bulletsType
-{
-    normal,
-    fire,
-    earth,
-    wind,
-    water,
+    public float bulletDestroyTime = 2f;
 }
 
-public class Player : MonoBehaviour 
+public enum bulletsType
+{
+	Fire,
+	Earth,
+	Air,
+	Water
+}
+
+public class Player : characterTemplate 
 {
     bool ableToShoot = true;
 
-    [SerializeField]
+	public Vector3 GetPlayerFuturePos(float scalar)
+	{
+		return transform.position + rb.velocity * scalar;
+	}
+	public Vector3 GetPlayerFuturePos()
+	{
+		return transform.position + rb.velocity;
+	}
+
+	[SerializeField]
     LayerMask groundMasks;
 
     [SerializeField]
@@ -31,6 +40,8 @@ public class Player : MonoBehaviour
 
     [SerializeField]
     bulletsType m_currentBulletType;
+
+	//ElementalType.Element bulletType;
 
     public bulletsType currentBulletType
     {
@@ -43,7 +54,9 @@ public class Player : MonoBehaviour
 
 	// Use this for initialization
 	void Start () {
-		
+
+		rb = GetComponent<Rigidbody>();
+
 	}
 
     IEnumerator shootBullet()
@@ -55,31 +68,54 @@ public class Player : MonoBehaviour
 
     void Update()
     {
-        if (Input.GetButton("Fire1") && ableToShoot)
+        if (!this.isAlive())
         {
-            GameObject bullet = (GameObject)Instantiate(this.bulletsType[(int)currentBulletType].bulletPrefab, 
-                                                        bulletSpawn.transform.position, 
-                                                        Quaternion.identity);
-            
-            bullet.GetComponent<bulletTemplate>().StartBullet(transform.forward, 
-                                                              this.bulletsType[(int)currentBulletType].bulletSpeed);
+            base.Explode();
+            return;
+        }
+
+		// Moving
+		PlayerPilot();
+
+		// Shooting
+        if (Input.GetButton("Fire2") && ableToShoot)
+        {
+            GameObject bullet = (GameObject)Instantiate(this.bulletsType[(int)currentBulletType].bulletPrefab,  bulletSpawn.transform.position, bulletSpawn.transform.rotation);
+            bullet.GetComponent<bulletTemplate>().StartBullet(transform.forward, this.bulletsType[(int)currentBulletType].bulletSpeed);
 
             this.ableToShoot = false;
 
-            StartCoroutine(shootBullet());
+            Destroy(bullet, this.bulletsType[(int)currentBulletType].bulletDestroyTime);
 
-            Debug.Log("Fire Bullet - "+currentBulletType);
+            StartCoroutine(shootBullet());
         }
     }
 	
 	// Update is called once per frame
 	void LateUpdate () 
     {
+        if (!this.isAlive())
+        {
+            base.Explode();
+            return;
+        }
+
         Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
         RaycastHit hit; 
         if (Physics.Raycast(ray, out hit, 1000f, this.groundMasks))
         {
-            transform.LookAt(new Vector3(hit.point.x, hit.point.y, hit.point.z));
+            transform.LookAt(new Vector3(hit.point.x, transform.position.y, hit.point.z));
         }
 	}
+
+	void PlayerPilot()
+	{
+		float forward = Input.GetAxis("Vertical");
+		float lateral = Input.GetAxis("Horizontal");
+
+		Vector3 forwardVector = Vector3.forward * moveSpeed * forward;
+		Vector3 lateralVector = Vector3.right * moveSpeed * lateral;
+		rb.velocity = forwardVector + lateralVector;
+	}
+
 }

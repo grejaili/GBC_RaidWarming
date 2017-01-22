@@ -1,29 +1,47 @@
 ﻿using UnityEngine;
 using System.Collections;
 
-public class EnemyMovement : MonoBehaviour {
+public class EnemyMovement : characterTemplate {
 
-	public enum EnemyType { Fire, Air, Earth, Water };
+	//public enum EnemyType { Fire, Air, Earth, Water };
 	public Transform target;
-	public float moveSpeed;
-	public float turnSpeed;
-	public float maxHealth;
-	public float waveRadius;
-	public GameObject Wave;
-	Rigidbody rb;
-	float health;
-	EnemyType type;
-	
+	public float predictiveScalar = 2;
+    [SerializeField]
+	ElementalType.Element element;
+	//EnemyType type;
+	Vector3 goalPosition;
+	float timeAlive;
+	float moveSpeedActual;
+
 	void OnEnable()
 	{
-		int rando = Random.Range(0, 3);
+		int rando = Random.Range(0, 4);
 		switch (rando)
 		{
-			case 0: type = EnemyType.Fire; break;
-			case 1: type = EnemyType.Air; break;
-			case 2: type = EnemyType.Earth; break;
-			case 3: type = EnemyType.Water; break;
+			case 0:
+				element = ElementalType.Element.Fire;
+				GetComponentInChildren<MeshRenderer>().material.color = Color.red;
+				break;
+
+			case 1:
+				element = ElementalType.Element.Air;
+				GetComponentInChildren<MeshRenderer>().material.color = Color.white;
+				break;
+
+			case 2:
+				element = ElementalType.Element.Earth;
+				GetComponentInChildren<MeshRenderer>().material.color = Color.black;
+				break;
+
+			case 3:
+				element = ElementalType.Element.Water;
+				GetComponentInChildren<MeshRenderer>().material.color = Color.blue;
+				break;
 		}
+
+		rb = GetComponent<Rigidbody>();
+		rb.velocity = Vector3.zero;
+		moveSpeedActual = moveSpeed;
 	}
 
 	void Start ()
@@ -32,12 +50,20 @@ public class EnemyMovement : MonoBehaviour {
 			target = GameObject.FindGameObjectWithTag("Player").transform;
 
 		rb = GetComponent<Rigidbody>();
-		health = maxHealth;
+		moveSpeedActual = moveSpeed;
+		//Debug.Log(element.ToString());
 	}
 	
 	
 	void Update ()
 	{
+		// Track lifetime
+		timeAlive += Time.deltaTime;
+		moveSpeedActual += Time.deltaTime * Time.deltaTime;
+		//Debug.Log(moveSpeedActual);
+
+		// Track player, predict movement
+		goalPosition = target.GetComponent<Player>().GetPlayerFuturePos(predictiveScalar);
 		ChasePlayer();
 	}
 
@@ -45,14 +71,14 @@ public class EnemyMovement : MonoBehaviour {
 	void ChasePlayer()
 	{
 		// Rotate to Target
-		var dir = target.position - transform.position;
+		var dir = goalPosition - transform.position;
 		Quaternion rotToTarget = Quaternion.LookRotation(dir);
 		transform.rotation = Quaternion.Lerp(transform.rotation, 
 											 rotToTarget,
 											 Time.deltaTime * turnSpeed);
 
 		// Forward Propulsion
-		rb.velocity = transform.forward * moveSpeed;
+		rb.velocity = transform.forward * moveSpeedActual;
 	}
 
 
@@ -60,20 +86,59 @@ public class EnemyMovement : MonoBehaviour {
 	{
 		switch(c.gameObject.tag)
 		{
-			case "Player":	Explode(); break;
-			case "Wave":	Explode(); break;
+			case "Player":
+				Explode(false);
+				UI_Manager.ResetComboPoints();
+				break;
+			case "Wave":
+				Explode(true);
+				break;
+            case "Bullet":
+				checkType(c.gameObject);
+				break;
 		}
 	}
 
+	void OnDisable()
+	{
+		
+	}
 
-	public void Explode()
+	public void Explode(bool destroyedByPlayer)
 	{
 		GameObject newWave = (GameObject)Instantiate(Wave, 
 								transform.position + Vector3.up * (transform.localScale.y / 2),
 								Quaternion.identity);
 		if (newWave)
 		{
-			Destroy(gameObject);
+			newWave.GetComponent<WaveForm>().destroyedByPlayer = destroyedByPlayer;
+
+			//Debug.Log(this.gameObject.name + " element: " + this.element.ToString());
+			if(destroyedByPlayer)
+			{
+				UI_Manager.UpdateComboPoints();
+				newWave.GetComponent<WaveForm>().SetElement(this.element);
+			}
+
+			gameObject.SetActive(false);
 		}
 	}
+
+    public void checkType(GameObject c)
+    {
+        Debug.Log(this.gameObject.name + "hit by a " + c.gameObject.GetComponent<bulletTemplate>().elementType.ToString() + " element type");
+        Debug.Log(this.gameObject.name + " element type: " + this.element.ToString());
+		if (this.element == c.gameObject.GetComponent<bulletTemplate>().elementType)
+		{
+            Debug.Log("hueuhehu");
+            Explode(true);
+        }
+    }
+
+	public new ElementalType.Element GetType()
+	{
+		return element;
+	}
+
+
 }
