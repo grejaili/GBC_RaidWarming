@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
+using UnityEngine.SceneManagement;
 
 public class UI_Manager : MonoBehaviour {
 
@@ -12,6 +13,7 @@ public class UI_Manager : MonoBehaviour {
 	private Player player;
 	private GameObject HUD_ComboCounter;
 	private GameObject[] HUD_Skills = new GameObject[4];
+
 
 	public static UI_Manager _instance = null;
 	public static UI_Manager instance
@@ -34,26 +36,42 @@ public class UI_Manager : MonoBehaviour {
 			DontDestroyOnLoad(this);
 		}
 
-		player = GameObject.FindGameObjectWithTag("Player").GetComponent<Player>();
-		HUD_ComboCounter = GameObject.Find("HUD_Combo");
-		HUD_ComboCounter.GetComponent<Text>().text = "";
-		for (int i = 0; i < HUD_Skills.Length; i++)
-		{
-			HUD_Skills[i] = GameObject.Find("HUD_" + ((ElementalType.Element)i).ToString());
-			HUD_Skills[i].GetComponent<Image>().color = new Color(1f, 1f, 1f, 0.3f);
-			//HUD_Skills[i].GetComponentInChildren<Text>().text = ((ElementalType.Element)i).ToString();
-			//Debug.Log(((ElementalType.Element)i).ToString());
-		}
-		
-		if(specialThreshold == 0)
-		{
-			Debug.Log("specialThreshold not set in inspector, defaulting to 6");
-			specialThreshold = 6;
-		}
+		//player = Resources.Load("Prefabs/Player") as Player;
+
+	
        // comboPointsText = GameObject.FindGameObjectWithTag("ComboPointText");  
 	   }
 	
-    public void Shoot()
+	public void OnSceneTransition()
+	{
+		switch (SceneManager.GetActiveScene().buildIndex)
+		{
+			case 0:
+
+				break;
+
+			case 1:
+				HUD_ComboCounter = GameObject.Find("HUD_Combo");
+				HUD_ComboCounter.GetComponent<Text>().text = "";
+				for (int i = 0; i < HUD_Skills.Length; i++)
+				{
+					HUD_Skills[i] = GameObject.Find("HUD_" + ((ElementalType.Element)i).ToString());
+					HUD_Skills[i].GetComponent<Image>().color = new Color(1f, 1f, 1f, 0.3f);
+					//HUD_Skills[i].GetComponentInChildren<Text>().text = ((ElementalType.Element)i).ToString();
+					//Debug.Log(((ElementalType.Element)i).ToString());
+				}
+
+				if (specialThreshold == 0)
+				{
+					Debug.Log("specialThreshold not set in inspector, defaulting to 6");
+					specialThreshold = 6;
+				}
+				break;
+		}
+
+	}
+
+	public void Shoot()
     {
         Debug.Log("Call shoot function on player");
     }
@@ -76,7 +94,7 @@ public class UI_Manager : MonoBehaviour {
     {
 		if (instance && instance.HUD_ComboCounter.GetComponent<Text>())
 		{
-		        string comboStatus = " Hit Combo!";
+		    //string comboStatus = " Hit Combo!";
 			instance.comboCounter += 1;
 			instance.HUD_ComboCounter.GetComponent<Text>().text = instance.comboCounter.ToString();
 		}
@@ -92,36 +110,6 @@ public class UI_Manager : MonoBehaviour {
 		instance.comboCounter = 0;
 	}
 
-
-	public void SelectSkillOne()
-    {
-        //player.currentBulletType = ;
-        Debug.Log("SKill ONe");
-       
-    }
-
-    public void SelectSkillTwo()
-    {
-        player.currentBulletType = bulletsType.Earth;
-        Debug.Log("SKill two");
-
-    }
-
-
-    public void SelectSkillThree()
-    {
-        player.currentBulletType = bulletsType.Fire;
-        Debug.Log("SKill three");
-
-    }
-
-
-    public void SelectSkillFour()
-    {
-        player.currentBulletType = bulletsType.Air;
-        Debug.Log("SKill Four");
-
-    }
 	// Workaround for unity's inspector not allowing enums as parameters for a function call...
 	// 0 = Fire, 1 = Earth, 2 = Air , 3 = Water
 	public void SetBulletType (int newType)
@@ -152,6 +140,8 @@ public class UI_Manager : MonoBehaviour {
 	public void StartGame()
 	{
 		Debug.Log ("We are in the beam!");
+		SceneManager.LoadScene(1);
+		OnSceneTransition();
 	}
 
 	public void QuitGame()
