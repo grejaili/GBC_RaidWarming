@@ -6,9 +6,9 @@ using UnityEngine;
 class bulletDetails
 {
     public GameObject bulletPrefab;
-    public float bulletSpeed = 50f;
-    public float coolDown    = 0.3f;
-    public float bulletDestroyTime = 2f;
+    public float bulletSpeed		= 1000f;
+    public float coolDown			= 0.3f;
+    public float bulletDestroyTime	= 2f;
 }
 
 public enum bulletsType
@@ -52,11 +52,14 @@ public class Player : characterTemplate
     [SerializeField]
     bulletDetails[] bulletsType;
 
+	LineRenderer aimLine;
+	Vector3 aimPoint;
+
 	// Use this for initialization
 	void Start () {
 
 		rb = GetComponent<Rigidbody>();
-
+		aimLine = GetComponent<LineRenderer>();
 	}
 
     IEnumerator shootBullet()
@@ -80,12 +83,12 @@ public class Player : characterTemplate
 		// Shooting
         if (Input.GetButton("Fire2") && ableToShoot)
         {
-            GameObject bullet = (GameObject)Instantiate(this.bulletsType[(int)currentBulletType].bulletPrefab,  bulletSpawn.transform.position, bulletSpawn.transform.rotation);
-            bullet.GetComponent<bulletTemplate>().StartBullet(transform.forward, this.bulletsType[(int)currentBulletType].bulletSpeed);
+            GameObject bullet = (GameObject)Instantiate(bulletsType[(int)currentBulletType].bulletPrefab,  bulletSpawn.transform.position, bulletSpawn.transform.rotation);
+			bullet.GetComponent<bulletTemplate>().StartBullet(transform.forward, 70f); //bulletsType[(int)currentBulletType].bulletSpeed);
 
-            this.ableToShoot = false;
+            ableToShoot = false;
 
-            Destroy(bullet, this.bulletsType[(int)currentBulletType].bulletDestroyTime);
+            Destroy(bullet, bulletsType[(int)currentBulletType].bulletDestroyTime);
 
             StartCoroutine(shootBullet());
         }
@@ -101,11 +104,15 @@ public class Player : characterTemplate
         }
 
         Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
-        RaycastHit hit; 
+        RaycastHit hit;
         if (Physics.Raycast(ray, out hit, 1000f, this.groundMasks))
         {
+			aimPoint = hit.point;
             transform.LookAt(new Vector3(hit.point.x, transform.position.y, hit.point.z));
         }
+
+		aimLine.SetPosition(0, transform.position);
+		aimLine.SetPosition(1, aimPoint);
 	}
 
 	void PlayerPilot()

@@ -51,7 +51,7 @@ public class UI_Manager : MonoBehaviour {
 			specialThreshold = 6;
 		}
        // comboPointsText = GameObject.FindGameObjectWithTag("ComboPointText");  
-	   }
+	}
 	
     public void Shoot()
     {
@@ -122,6 +122,7 @@ public class UI_Manager : MonoBehaviour {
         Debug.Log("SKill Four");
 
     }
+
 	// Workaround for unity's inspector not allowing enums as parameters for a function call...
 	// 0 = Fire, 1 = Earth, 2 = Air , 3 = Water
 	public void SetBulletType (int newType)
@@ -146,5 +147,30 @@ public class UI_Manager : MonoBehaviour {
 			else
 				HUD_Skills[i].GetComponent<Image>().color = transparent;
 		}
+	}
+
+
+	public int GetBulletType()
+	{
+		string temp = player.currentBulletType.ToString();
+		switch(temp)
+		{
+			case "Fire":
+				temp = "0";
+				break;
+			case "Earth":
+				temp = "1";
+				break;
+			case "Air":
+				temp = "2";
+				break;
+			case "Water":
+				temp = "3";
+				break;
+			default:
+				temp = "0";
+				break;
+		}
+		return int.Parse(temp);
 	}
 }

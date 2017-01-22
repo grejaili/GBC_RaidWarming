@@ -73,6 +73,7 @@ public class GameManager : MonoBehaviour {
 			SpawnEnemy();
 		}
 
+		// Num keys to Change Weapon
 		if (Input.GetKeyDown(KeyCode.Alpha1))
 		{
 			UI_Manager.instance.SetBulletType(0);
@@ -88,6 +89,36 @@ public class GameManager : MonoBehaviour {
 		if (Input.GetKeyDown(KeyCode.Alpha4))
 		{
 			UI_Manager.instance.SetBulletType(3);
+		}
+
+		// Scroll to Change Weapon
+		if (Input.GetAxis("Mouse ScrollWheel") > 0)
+		{
+			Debug.Log(UI_Manager.instance.GetBulletType());
+
+			if (UI_Manager.instance.GetBulletType() < 3)
+			{
+				UI_Manager.instance.SetBulletType(
+									UI_Manager.instance.GetBulletType() + 1);
+			}
+			else // Cycle back to first type
+			{
+				UI_Manager.instance.SetBulletType(0);
+			}
+		}
+		else if (Input.GetAxis("Mouse ScrollWheel") < 0)
+		{
+			Debug.Log(UI_Manager.instance.GetBulletType());
+
+			if (UI_Manager.instance.GetBulletType() > 0)
+			{
+				UI_Manager.instance.SetBulletType(
+									UI_Manager.instance.GetBulletType() - 1);
+			}
+			else // Cycle back to last type
+			{
+				UI_Manager.instance.SetBulletType(3);
+			}
 		}
 
 	}
@@ -117,7 +148,7 @@ public class GameManager : MonoBehaviour {
 		}
 
 		///Instantiate(enemies[enemyTypeToSpawn], spawnLocation, Quaternion.identity);
-		Debug.DrawLine(transform.position, spawnLocation, Color.red, spawnRateInSeconds);
+		//Debug.DrawLine(transform.position, spawnLocation, Color.red, spawnRateInSeconds);
 	}
 
 	/// <summary>

@@ -5,6 +5,7 @@ public class EnemyMovement : characterTemplate {
 
 	//public enum EnemyType { Fire, Air, Earth, Water };
 	public Transform target;
+	public float speedGrowth = 1.1f;
 	public float predictiveScalar = 2;
     [SerializeField]
 	ElementalType.Element element;
@@ -12,6 +13,7 @@ public class EnemyMovement : characterTemplate {
 	Vector3 goalPosition;
 	float timeAlive;
 	float moveSpeedActual;
+	float turnSpeedActual;
 
 	void OnEnable()
 	{
@@ -42,6 +44,7 @@ public class EnemyMovement : characterTemplate {
 		rb = GetComponent<Rigidbody>();
 		rb.velocity = Vector3.zero;
 		moveSpeedActual = moveSpeed;
+		turnSpeedActual = turnSpeed;
 	}
 
 	void Start ()
@@ -51,15 +54,17 @@ public class EnemyMovement : characterTemplate {
 
 		rb = GetComponent<Rigidbody>();
 		moveSpeedActual = moveSpeed;
+		turnSpeedActual = turnSpeed;
 		//Debug.Log(element.ToString());
 	}
 	
 	
 	void Update ()
 	{
-		// Track lifetime
+		// Increase Speed and Turn
 		timeAlive += Time.deltaTime;
-		moveSpeedActual += Time.deltaTime * Time.deltaTime;
+		moveSpeedActual += Time.deltaTime * speedGrowth;
+		turnSpeedActual += Time.deltaTime * speedGrowth;
 		//Debug.Log(moveSpeedActual);
 
 		// Track player, predict movement
@@ -117,20 +122,20 @@ public class EnemyMovement : characterTemplate {
 			if(destroyedByPlayer)
 			{
 				UI_Manager.UpdateComboPoints();
-				newWave.GetComponent<WaveForm>().SetElement(this.element);
+				
 			}
-
+			newWave.GetComponent<WaveForm>().SetElement(element);
 			gameObject.SetActive(false);
 		}
 	}
 
     public void checkType(GameObject c)
     {
-        Debug.Log(this.gameObject.name + "hit by a " + c.gameObject.GetComponent<bulletTemplate>().elementType.ToString() + " element type");
-        Debug.Log(this.gameObject.name + " element type: " + this.element.ToString());
-		if (this.element == c.gameObject.GetComponent<bulletTemplate>().elementType)
+        //Debug.Log(this.gameObject.name + "hit by a " + c.gameObject.GetComponent<bulletTemplate>().elementType.ToString() + " element type");
+        //Debug.Log(this.gameObject.name + " element type: " + this.element.ToString());
+		if (element == c.gameObject.GetComponent<bulletTemplate>().elementType)
 		{
-            Debug.Log("hueuhehu");
+            //Debug.Log("hueuhehu");
             Explode(true);
         }
     }
