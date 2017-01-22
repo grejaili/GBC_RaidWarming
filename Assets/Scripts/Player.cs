@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 [System.Serializable]
 class bulletDetails
@@ -56,12 +57,20 @@ public class Player : characterTemplate
 	LineRenderer aimLine;
 	Vector3 aimPoint;
 
+	public float maxDistFromOrigin = 73;
+	public float forceBounce = 5;
+	Vector3 origin = Vector3.zero;
+
 	// Gun Sound
 	AudioSource audioComp;
 
-	// Use this for initialization
-	void Start () {
+	float forward;
+	float lateral;
 
+	// Use this for initialization
+	void Start ()
+	{
+		origin = Vector3.zero;
 		rb = GetComponent<Rigidbody>();
 		aimLine = GetComponent<LineRenderer>();
 		audioComp = GetComponent<AudioSource>();
@@ -81,9 +90,6 @@ public class Player : characterTemplate
             base.Explode();
             return;
         }
-
-		// Moving
-		PlayerPilot();
 
 		// Shooting
         if (Input.GetButton("Fire2") && ableToShoot)
@@ -120,16 +126,48 @@ public class Player : characterTemplate
 
 		aimLine.SetPosition(0, transform.position);
 		aimLine.SetPosition(1, aimPoint);
+
+		// Moving
+		PlayerPilot();
 	}
+
+	private void OnCollisionEnter(Collision col)
+	{
+		if (col.gameObject.tag == "Enemy")
+		{
+			SceneManager.LoadScene(0);
+			Destroy(this.gameObject);
+		}
+	}
+
 
 	void PlayerPilot()
 	{
-		float forward = Input.GetAxis("Vertical");
-		float lateral = Input.GetAxis("Horizontal");
+		float distToOrigin = Vector3.Distance(transform.position, origin);
+		//Debug.Log("dist: " + distToOrigin);
 
+		// Move Controls
+		forward = Input.GetAxis("Vertical");
+		lateral = Input.GetAxis("Horizontal");
 		Vector3 forwardVector = Vector3.forward * moveSpeed * forward;
 		Vector3 lateralVector = Vector3.right * moveSpeed * lateral;
 		rb.velocity = forwardVector + lateralVector;
+
+		// Edge Bounce
+		if (distToOrigin >= maxDistFromOrigin)
+		{
+			Vector3 toOrigin = origin - transform.position;
+			rb.AddForce(toOrigin * forceBounce, ForceMode.Force);
+		}
 	}
 
+	public float GetForwardInput()
+	{
+		return forward;
+	}
+
+	public float GetLateralInput()
+	{
+		return lateral;
+	}
 }

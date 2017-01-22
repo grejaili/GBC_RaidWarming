@@ -9,6 +9,7 @@ public class UI_Manager : MonoBehaviour {
 	private int comboCounter = 0;
 	private bool paused;
 
+	private Animator anim;
 	private Player player;
 	private GameObject HUD_ComboCounter;
 	private GameObject[] HUD_Skills = new GameObject[4];
@@ -143,9 +144,16 @@ public class UI_Manager : MonoBehaviour {
 			if (i == (int)newType)
 			{
 				HUD_Skills[i].GetComponent<Image>().color = Color.white;
+				anim = HUD_Skills[i].GetComponentInChildren<Animator>();
+				anim.SetBool("showEffect", true);
 			}
 			else
+			{
 				HUD_Skills[i].GetComponent<Image>().color = transparent;
+				anim = HUD_Skills[i].GetComponentInChildren<Animator>();
+				anim.SetBool("showEffect", false);
+				anim.CrossFade("hideEffect", 0f);
+			}
 		}
 	}
 

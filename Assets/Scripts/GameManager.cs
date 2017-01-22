@@ -31,10 +31,6 @@ public class GameManager : MonoBehaviour {
 			GameObject enemy = Instantiate(enemies[enemyType]);
 			enemy.SetActive(false);
 			enemyPopulation.Add(enemy);
-			//Debug.Log("added " + enemy.name + " to pool party");
-			//
-
-			//GameObject wave = (GameObject)Instantiate()
 		}
 
 		// Checks if a GameManager exists, and destroys the second copy.
@@ -70,7 +66,7 @@ public class GameManager : MonoBehaviour {
 		{
 			//Debug.Log(timeSinceLastSpawn);
 			timeSinceLastSpawn = 0.0f;
-			SpawnEnemy();
+			SpawnEnemy(2);
 		}
 
 		// Num keys to Change Weapon
@@ -126,54 +122,61 @@ public class GameManager : MonoBehaviour {
 	/// <summary>
 	/// Spawns a single random GameObject element of array enemies at a random location
 	/// </summary>
-	void SpawnEnemy()
-	{
-		float theta = Random.Range(0.0f, 360.0f);
-		int enemyTypeToSpawn = Random.Range(0, enemies.Length);
-		//Debug.Log(theta);
-		float rando = Random.Range(radius / 2, radius * 2);
-		float x = transform.position.x + rando * Mathf.Cos(theta * Mathf.Deg2Rad);
-		float z = transform.position.z + rando * Mathf.Sin(theta * Mathf.Deg2Rad);
+	//void SpawnEnemy()
+	//{
+	//	float theta = Random.Range(0.0f, 360.0f);
+	//	int enemyTypeToSpawn = Random.Range(0, enemies.Length);
+	//	//Debug.Log(theta);
+	//	float rando = Random.Range(radius / 2, radius * 2);
+	//	float x = transform.position.x + rando * Mathf.Cos(theta * Mathf.Deg2Rad);
+	//	float z = transform.position.z + rando * Mathf.Sin(theta * Mathf.Deg2Rad);
 
-		Vector3 spawnLocation = new Vector3(x, 0.0f, z);
+	//	Vector3 spawnLocation = new Vector3(x, 0.0f, z);
 
-		for (int i = 0; i < enemyPopulation.Count; i++)
-		{
-			if (!enemyPopulation[i].activeInHierarchy)
-			{
-				GameObject newEnemy = enemyPopulation[i];
-				newEnemy.transform.position = spawnLocation;
-				newEnemy.SetActive(true);
-				break;
-			}
-		}
+	//	for (int i = 0; i < enemyPopulation.Count; i++)
+	//	{
+	//		if (!enemyPopulation[i].activeInHierarchy)
+	//		{
+	//			GameObject newEnemy = enemyPopulation[i];
+	//			newEnemy.transform.position = spawnLocation;
+	//			newEnemy.SetActive(true);
+	//			break;
+	//		}
+	//	}
 
-		///Instantiate(enemies[enemyTypeToSpawn], spawnLocation, Quaternion.identity);
-		//Debug.DrawLine(transform.position, spawnLocation, Color.red, spawnRateInSeconds);
-	}
+	//	///Instantiate(enemies[enemyTypeToSpawn], spawnLocation, Quaternion.identity);
+	//	//Debug.DrawLine(transform.position, spawnLocation, Color.red, spawnRateInSeconds);
+	//}
 
 	/// <summary>
 	/// Spawns numberOfEnemiesToSpawn at a series of random locations.
 	/// </summary>
 	/// <param name="numberOfEnemiesToSpawn"></param>
 	/// 
-	//void SpawnEnemy(uint numberOfEnemiesToSpawn)
-	//{
-	//	//Vector3 lastSpawnLocation = new Vector3();
-	//	for (int i = 0; i < numberOfEnemiesToSpawn; i++)
-	//	{
-	//		float theta = Random.Range(0.0f, 360.0f);
-	//		int enemyTypeToSpawn = Random.Range(0, enemies.Length);
-	//		Debug.Log(theta);
-	//		float x = transform.position.x + radius * Mathf.Cos(theta * Mathf.Deg2Rad);
-	//		float y = transform.position.y + radius * Mathf.Sin(theta * Mathf.Deg2Rad);
+	void SpawnEnemy(uint numberOfEnemiesToSpawn)
+	{
+		//Vector3 lastSpawnLocation = new Vector3();
+		for (int i = 0; i < numberOfEnemiesToSpawn; i++)
+		{
+			for (int j = 0; j < enemyPopulation.Count; j++)
+			{
+				if (!enemyPopulation[j].activeInHierarchy)
+				{
+					float theta = Random.Range(0.0f, 360.0f);
+					int enemyTypeToSpawn = Random.Range(0, enemies.Length);
+					float rando = Random.Range(radius / 2, radius * 2);
+					float x = transform.position.x + rando * Mathf.Cos(theta * Mathf.Deg2Rad);
+					float z = transform.position.z + rando * Mathf.Sin(theta * Mathf.Deg2Rad);
 
-	//		Vector3 spawnLocation = new Vector3(x, y, 0.0f);
-
-	//		//Instantiate(enemies[enemyTypeToSpawn], spawnLocation, Quaternion.identity);
-	//		Debug.DrawLine(transform.position, spawnLocation, Color.red, spawnRateInSeconds);
-	//	}
-	//}
+					Vector3 spawnLocation = new Vector3(x, 0.0f, z);
+					GameObject newEnemy = enemyPopulation[j];
+					newEnemy.transform.position = spawnLocation;
+					newEnemy.SetActive(true);
+					break;
+				}
+			}
+		}
+	}
 
 
 	public static GameManager instance

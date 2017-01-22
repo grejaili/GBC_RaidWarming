@@ -11,11 +11,15 @@ public class CameraRig : MonoBehaviour {
 
 	void Update ()
 	{
-		Vector3 newPos = target.position;
-		newPos.x += xOffset;
-		newPos.y += yOffset;
-		newPos.z += zOffset;
+		if (target)
+		{
+			Vector3 newPos = target.position;
+			newPos.x += xOffset;
+			newPos.y += yOffset;
+			newPos.z += zOffset;
 
-		transform.position = newPos;
+			transform.position = newPos;
+		}
+		
 	}
 }

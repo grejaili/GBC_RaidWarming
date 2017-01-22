@@ -19,23 +19,23 @@ public class ElementalType : MonoBehaviour {
 		set { m_type = value; }
 	}
 
-	public static Element GetCounterElement(Element e)
-	{
-		switch (e)
-		{
-			case Element.Fire:
-				return Element.Water;
+	//public static Element GetCounterElement(Element e)
+	//{
+	//	switch (e)
+	//	{
+	//		case Element.Fire:
+	//			return Element.Water;
 
-			case Element.Earth:
-				return Element.Air;
+	//		case Element.Earth:
+	//			return Element.Air;
 
-			case Element.Air:
-				return Element.Fire;
+	//		case Element.Air:
+	//			return Element.Fire;
 
-			case Element.Water:
-				return Element.Earth;
+	//		case Element.Water:
+	//			return Element.Earth;
 
-		}
-		return Element.Air;
-	}
+	//	}
+	//	return Element.Air;
+	//}
 }

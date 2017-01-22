@@ -17,30 +17,6 @@ public class EnemyMovement : characterTemplate {
 
 	void OnEnable()
 	{
-		//int rando = Random.Range(0, 4);
-		//switch (rando)
-		//{
-		//	case 0:
-		//		element = ElementalType.Element.Fire;
-		//		GetComponentInChildren<MeshRenderer>().material.color = Color.red;
-		//		break;
-
-		//	case 1:
-		//		element = ElementalType.Element.Air;
-		//		GetComponentInChildren<MeshRenderer>().material.color = Color.white;
-		//		break;
-
-		//	case 2:
-		//		element = ElementalType.Element.Earth;
-		//		GetComponentInChildren<MeshRenderer>().material.color = Color.black;
-		//		break;
-
-		//	case 3:
-		//		element = ElementalType.Element.Water;
-		//		GetComponentInChildren<MeshRenderer>().material.color = Color.blue;
-		//		break;
-		//}
-
 		rb = GetComponent<Rigidbody>();
 		rb.velocity = Vector3.zero;
 		moveSpeedActual = moveSpeed;
@@ -55,7 +31,6 @@ public class EnemyMovement : characterTemplate {
 		rb = GetComponent<Rigidbody>();
 		moveSpeedActual = moveSpeed;
 		turnSpeedActual = turnSpeed;
-		//Debug.Log(element.ToString());
 	}
 	
 	
@@ -65,11 +40,14 @@ public class EnemyMovement : characterTemplate {
 		timeAlive += Time.deltaTime;
 		moveSpeedActual += Time.deltaTime * speedGrowth;
 		turnSpeedActual += Time.deltaTime * speedGrowth;
-		//Debug.Log(moveSpeedActual);
 
 		// Track player, predict movement
-		goalPosition = target.GetComponent<Player>().GetPlayerFuturePos(predictiveScalar);
-		ChasePlayer();
+		if (target)
+		{
+			goalPosition = target.GetComponent<Player>().GetPlayerFuturePos(predictiveScalar);
+			ChasePlayer();
+		}
+		
 	}
 
 
@@ -95,19 +73,13 @@ public class EnemyMovement : characterTemplate {
 				Explode(false);
 				UI_Manager.ResetComboPoints();
 				break;
-			case "Wave":
-				Explode(true);
-				break;
+			//case "Wave":
             case "Bullet":
 				checkType(c.gameObject);
 				break;
 		}
 	}
 
-	void OnDisable()
-	{
-		
-	}
 
 	public void Explode(bool destroyedByPlayer)
 	{
@@ -117,8 +89,7 @@ public class EnemyMovement : characterTemplate {
 		if (newWave)
 		{
 			newWave.GetComponent<WaveForm>().destroyedByPlayer = destroyedByPlayer;
-
-			//Debug.Log(this.gameObject.name + " element: " + this.element.ToString());
+			
 			if(destroyedByPlayer)
 			{
 				UI_Manager.UpdateComboPoints();
@@ -130,11 +101,8 @@ public class EnemyMovement : characterTemplate {
 
     public void checkType(GameObject c)
     {
-        //Debug.Log(this.gameObject.name + "hit by a " + c.gameObject.GetComponent<bulletTemplate>().elementType.ToString() + " element type");
-        //Debug.Log(this.gameObject.name + " element type: " + this.element.ToString());
-		if (element == c.gameObject.GetComponent<bulletTemplate>().elementType)
+        if (element == c.gameObject.GetComponent<bulletTemplate>().elementType)
 		{
-            //Debug.Log("hueuhehu");
             Explode(true);
         }
     }

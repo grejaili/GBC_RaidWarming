@@ -20,7 +20,6 @@ public class WaveForm : MonoBehaviour {
 	{
 		if (particleArray[3] == null)
 		{
-			//Debug.Log("we are in the beam");
 			for (int i = 0; i < particleArray.Length; i++)
 			{
 				particleArray[i] = Resources.Load(("Prefabs/" + ((ElementalType.Element)i).ToString() + "WaveParticles")) as GameObject;
@@ -31,10 +30,6 @@ public class WaveForm : MonoBehaviour {
 
 	void Start ()
 	{
-		
-		//waveParticles.main = temp;
-		//Debug.Log(waveParticles.main.startSpeed.ToString());
-
 		timer = killCheckInterval / 2;
 	}
 	
@@ -43,11 +38,7 @@ public class WaveForm : MonoBehaviour {
 	{
 		// Wave Propagation
 		waveSize = Mathf.Lerp(waveSize, waveRange, Time.deltaTime * (waveSpeed / 2));
-		//Debug.DrawRay(transform.position, Vector3.forward * waveSize, Color.white);
-		//Debug.DrawRay(transform.position, Vector3.right * waveSize, Color.white);
-		//Debug.DrawRay(transform.position, -Vector3.forward * waveSize, Color.white);
-		//Debug.DrawRay(transform.position, -Vector3.right * waveSize, Color.white);
-
+		
 		if (destroyedByPlayer)
 		{
 			// Kill Check
@@ -85,7 +76,6 @@ public class WaveForm : MonoBehaviour {
 
 	void SpawnParticleSystem()
 	{
-		//Debug.Log(elementalType.ToString());
 		if (!waveParticles)
 		{
 			waveParticles = Instantiate(particleArray[(int)elementalType],
@@ -100,6 +90,5 @@ public class WaveForm : MonoBehaviour {
 	{
 		elementalType = newType;
 		SpawnParticleSystem();
-		//Debug.Log(gameObject.name + " element type: " + type.ToString());
 	}
 }
