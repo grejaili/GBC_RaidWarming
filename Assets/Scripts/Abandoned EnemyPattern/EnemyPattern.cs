@@ -14,7 +14,7 @@ public class EnemyPattern : MonoBehaviour {
 		int x = 0;
 		for (int i = 0; i < transform.childCount; i++)
 		{
-			if (transform.GetChild(i).GetComponent<Enemy>())
+			if (transform.GetChild(i).GetComponent<EnemyMovement>())
 			{
 				Debug.Log(transform.GetChild(i).name);
 				enemiesToSpawn.Add(transform.GetChild(i).gameObject);
