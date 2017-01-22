@@ -147,4 +147,16 @@ public class UI_Manager : MonoBehaviour {
 				HUD_Skills[i].GetComponent<Image>().color = transparent;
 		}
 	}
+
+
+	public void StartGame()
+	{
+		Debug.Log ("We are in the beam!");
+	}
+
+	public void QuitGame()
+	{
+		Debug.Log ("I AM QUITTING THE BEAM");
+		Application.Quit ();
+	}
 }
