@@ -135,7 +135,8 @@ public class Player : characterTemplate
 	{
 		if (col.gameObject.tag == "Enemy")
 		{
-			SceneManager.LoadScene(0);
+			SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
+			UI_Manager.instance.initializedScene = false;
 			Destroy(this.gameObject);
 		}
 	}

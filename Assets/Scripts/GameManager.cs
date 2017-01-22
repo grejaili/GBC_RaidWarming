@@ -1,6 +1,7 @@
 ﻿using UnityEngine;
 using System.Collections;
 using System.Collections.Generic;
+using UnityEngine.SceneManagement;
 
 public class GameManager : MonoBehaviour {
 
@@ -24,14 +25,7 @@ public class GameManager : MonoBehaviour {
 		enemyPopulation = new List<GameObject>();
 		wavePopulation = new List<GameObject>();
 
-		// Create host of enemies in the wing
-		for (int i = 0; i < maxPopulation; i++)
-		{
-			int enemyType = Random.Range(0, enemies.Length);
-			GameObject enemy = Instantiate(enemies[enemyType]);
-			enemy.SetActive(false);
-			enemyPopulation.Add(enemy);
-		}
+		
 
 		// Checks if a GameManager exists, and destroys the second copy.
 		if (instance)
@@ -155,30 +149,51 @@ public class GameManager : MonoBehaviour {
 	/// 
 	void SpawnEnemy(uint numberOfEnemiesToSpawn)
 	{
-		//Vector3 lastSpawnLocation = new Vector3();
-		for (int i = 0; i < numberOfEnemiesToSpawn; i++)
+		
+		if (SceneManager.GetActiveScene().buildIndex == 1)
 		{
-			for (int j = 0; j < enemyPopulation.Count; j++)
+			//Vector3 lastSpawnLocation = new Vector3();
+			for (int i = 0; i < numberOfEnemiesToSpawn; i++)
 			{
-				if (!enemyPopulation[j].activeInHierarchy)
+				for (int j = 0; j < enemyPopulation.Count; j++)
 				{
-					float theta = Random.Range(0.0f, 360.0f);
-					int enemyTypeToSpawn = Random.Range(0, enemies.Length);
-					float rando = Random.Range(radius / 2, radius * 2);
-					float x = transform.position.x + rando * Mathf.Cos(theta * Mathf.Deg2Rad);
-					float z = transform.position.z + rando * Mathf.Sin(theta * Mathf.Deg2Rad);
+					//Debug.Log(enemyPopulation[j]);
+					if (!enemyPopulation[j].activeInHierarchy)
+					{
+						float theta = Random.Range(0.0f, 360.0f);
+						int enemyTypeToSpawn = Random.Range(0, enemies.Length);
+						float rando = Random.Range(radius / 2, radius * 2);
+						float x = transform.position.x + rando * Mathf.Cos(theta * Mathf.Deg2Rad);
+						float z = transform.position.z + rando * Mathf.Sin(theta * Mathf.Deg2Rad);
 
-					Vector3 spawnLocation = new Vector3(x, 0.0f, z);
-					GameObject newEnemy = enemyPopulation[j];
-					newEnemy.transform.position = spawnLocation;
-					newEnemy.SetActive(true);
-					break;
+						Vector3 spawnLocation = new Vector3(x, 0.0f, z);
+						GameObject newEnemy = enemyPopulation[j];
+						newEnemy.transform.position = spawnLocation;
+						newEnemy.SetActive(true);
+						break;
+					}
 				}
 			}
 		}
+		
 	}
 
 
+	public void OnSceneTransition()
+	{
+		Debug.Log("This should appear every time the player dies");
+		// Create host of enemies in the wing
+		enemyPopulation.Clear();
+			for (int i = 0; i < maxPopulation; i++)
+			{
+					int enemyType = Random.Range(0, enemies.Length);
+					GameObject enemy = Instantiate(enemies[enemyType]);
+					enemy.SetActive(false);
+					enemyPopulation.Add(enemy);
+			}
+
+			Debug.Log(SceneManager.GetActiveScene().name);
+	}
 	public static GameManager instance
 	{
 		get { return _instance; }
