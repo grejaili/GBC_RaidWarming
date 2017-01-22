@@ -25,19 +25,15 @@ public class ElementalType : MonoBehaviour {
 		{
 			case Element.Fire:
 				return Element.Water;
-				break;
 
 			case Element.Earth:
 				return Element.Air;
-				break;
 
 			case Element.Air:
 				return Element.Fire;
-				break;
 
 			case Element.Water:
 				return Element.Earth;
-				break;
 
 		}
 		return Element.Air;

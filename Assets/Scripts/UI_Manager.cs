@@ -47,7 +47,7 @@ public class UI_Manager : MonoBehaviour {
 		
 		if(specialThreshold == 0)
 		{
-			Debug.Log("specialThreshold not set in inspector, defaulting to 6");
+			//Debug.Log("specialThreshold not set in inspector, defaulting to 6");
 			specialThreshold = 6;
 		}
        // comboPointsText = GameObject.FindGameObjectWithTag("ComboPointText");  
@@ -76,13 +76,13 @@ public class UI_Manager : MonoBehaviour {
     {
 		if (instance && instance.HUD_ComboCounter.GetComponent<Text>())
 		{
-		        string comboStatus = " Hit Combo!";
+		    string comboStatus = " Hit Combo!";
 			instance.comboCounter += 1;
 			instance.HUD_ComboCounter.GetComponent<Text>().text = instance.comboCounter.ToString();
 		}
 		if (instance.comboCounter % instance.specialThreshold == 0)
 		{
-			Debug.Log("Some kinda special shit should happen.");
+			//Debug.Log("Some kinda special shit should happen.");
 		}
     }
 
@@ -133,7 +133,7 @@ public class UI_Manager : MonoBehaviour {
 	public void SetBulletType (ElementalType.Element newType)
 	{
 		player.currentBulletType = (bulletsType)newType;
-		Debug.Log("Player's current bullet type: " + player.currentBulletType.ToString());
+		//Debug.Log("Player's current bullet type: " + player.currentBulletType.ToString());
 
 		Color transparent = Color.white;
 		transparent.a = 0.8f;

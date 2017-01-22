@@ -17,29 +17,29 @@ public class EnemyMovement : characterTemplate {
 
 	void OnEnable()
 	{
-		int rando = Random.Range(0, 4);
-		switch (rando)
-		{
-			case 0:
-				element = ElementalType.Element.Fire;
-				GetComponentInChildren<MeshRenderer>().material.color = Color.red;
-				break;
+		//int rando = Random.Range(0, 4);
+		//switch (rando)
+		//{
+		//	case 0:
+		//		element = ElementalType.Element.Fire;
+		//		GetComponentInChildren<MeshRenderer>().material.color = Color.red;
+		//		break;
 
-			case 1:
-				element = ElementalType.Element.Air;
-				GetComponentInChildren<MeshRenderer>().material.color = Color.white;
-				break;
+		//	case 1:
+		//		element = ElementalType.Element.Air;
+		//		GetComponentInChildren<MeshRenderer>().material.color = Color.white;
+		//		break;
 
-			case 2:
-				element = ElementalType.Element.Earth;
-				GetComponentInChildren<MeshRenderer>().material.color = Color.black;
-				break;
+		//	case 2:
+		//		element = ElementalType.Element.Earth;
+		//		GetComponentInChildren<MeshRenderer>().material.color = Color.black;
+		//		break;
 
-			case 3:
-				element = ElementalType.Element.Water;
-				GetComponentInChildren<MeshRenderer>().material.color = Color.blue;
-				break;
-		}
+		//	case 3:
+		//		element = ElementalType.Element.Water;
+		//		GetComponentInChildren<MeshRenderer>().material.color = Color.blue;
+		//		break;
+		//}
 
 		rb = GetComponent<Rigidbody>();
 		rb.velocity = Vector3.zero;

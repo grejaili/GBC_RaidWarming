@@ -20,7 +20,7 @@ public class WaveForm : MonoBehaviour {
 	{
 		if (particleArray[3] == null)
 		{
-			Debug.Log("we are in the beam");
+			//Debug.Log("we are in the beam");
 			for (int i = 0; i < particleArray.Length; i++)
 			{
 				particleArray[i] = Resources.Load(("Prefabs/" + ((ElementalType.Element)i).ToString() + "WaveParticles")) as GameObject;

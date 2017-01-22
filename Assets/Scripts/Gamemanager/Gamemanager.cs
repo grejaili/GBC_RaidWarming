@@ -27,11 +27,11 @@ public class GameManager : MonoBehaviour {
 		// Create host of enemies in the wing
 		for (int i = 0; i < maxPopulation; i++)
 		{
-			//int enemyType = Random.Range(0, enemies.Length);
-			GameObject enemy = (GameObject)Instantiate(enemies[0]);
+			int enemyType = Random.Range(0, enemies.Length);
+			GameObject enemy = Instantiate(enemies[enemyType]);
 			enemy.SetActive(false);
 			enemyPopulation.Add(enemy);
-			Debug.Log("added " + enemy.name + " to pool party");
+			//Debug.Log("added " + enemy.name + " to pool party");
 			//
 
 			//GameObject wave = (GameObject)Instantiate()

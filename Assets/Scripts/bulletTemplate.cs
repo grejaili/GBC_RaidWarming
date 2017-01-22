@@ -47,14 +47,13 @@ public class bulletTemplate : MonoBehaviour
 
     void OnCollisionEnter(Collision collision)
     {
-        Destroy(gameObject);
+		if (collision.gameObject.tag == "test")
+		{
+			collision.gameObject.SendMessage("Explode", elementType);
+		}
 
-        Debug.Log(collision.gameObject.tag);
-
-        if(collision.gameObject.tag == "test")
-        {
-            collision.gameObject.SendMessage("Explode", elementType);
-        }
+		//Debug.Log(collision.gameObject.tag);
+		Destroy(gameObject);
     }
 
    
