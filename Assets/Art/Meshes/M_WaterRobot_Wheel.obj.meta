@@ -1,17 +1,17 @@
 fileFormatVersion: 2
-guid: e522ee4c0401eed49ada7a475025985e
-timeCreated: 1485031552
+guid: 8de4dded22236ed4e9ce155ce104961c
+timeCreated: 1485047571
 licenseType: Free
 ModelImporter:
   serializedVersion: 19
   fileIDToRecycleName:
-    100000: M_AirRobot
+    100000: M_WaterRobot_Wheel
     100002: //RootNode
-    400000: M_AirRobot
+    400000: M_WaterRobot_Wheel
     400002: //RootNode
-    2300000: M_AirRobot
-    3300000: M_AirRobot
-    4300000: M_AirRobot
+    2300000: M_WaterRobot_Wheel
+    3300000: M_WaterRobot_Wheel
+    4300000: M_WaterRobot_Wheel
   materials:
     importMaterials: 1
     materialName: 0
@@ -36,7 +36,7 @@ ModelImporter:
     isReadable: 1
   meshes:
     lODScreenPercentages: []
-    globalScale: 1
+    globalScale: 0.01
     meshCompression: 0
     addColliders: 0
     importBlendShapes: 1
