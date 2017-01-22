@@ -1,17 +1,17 @@
 fileFormatVersion: 2
-guid: 9c7fab1a212f5864087c47818659d04d
+guid: 306b62f74b03fba408577c2db87ddae1
 timeCreated: 1485057232
 licenseType: Free
 ModelImporter:
   serializedVersion: 19
   fileIDToRecycleName:
-    100000: M_EarthBullet
+    100000: M_WaterBullet
     100002: //RootNode
-    400000: M_EarthBullet
+    400000: M_WaterBullet
     400002: //RootNode
-    2300000: M_EarthBullet
-    3300000: M_EarthBullet
-    4300000: M_EarthBullet
+    2300000: M_WaterBullet
+    3300000: M_WaterBullet
+    4300000: M_WaterBullet
   materials:
     importMaterials: 1
     materialName: 0
