@@ -52,14 +52,19 @@ public class Player : characterTemplate
     [SerializeField]
     bulletDetails[] bulletsType;
 
+	// Aim Line
 	LineRenderer aimLine;
 	Vector3 aimPoint;
+
+	// Gun Sound
+	AudioSource audioComp;
 
 	// Use this for initialization
 	void Start () {
 
 		rb = GetComponent<Rigidbody>();
 		aimLine = GetComponent<LineRenderer>();
+		audioComp = GetComponent<AudioSource>();
 	}
 
     IEnumerator shootBullet()
@@ -83,7 +88,9 @@ public class Player : characterTemplate
 		// Shooting
         if (Input.GetButton("Fire2") && ableToShoot)
         {
-            GameObject bullet = (GameObject)Instantiate(bulletsType[(int)currentBulletType].bulletPrefab,  bulletSpawn.transform.position, bulletSpawn.transform.rotation);
+			audioComp.Play();
+
+			GameObject bullet = (GameObject)Instantiate(bulletsType[(int)currentBulletType].bulletPrefab,  bulletSpawn.transform.position, bulletSpawn.transform.rotation);
 			bullet.GetComponent<bulletTemplate>().StartBullet(transform.forward, 70f); //bulletsType[(int)currentBulletType].bulletSpeed);
 
             ableToShoot = false;
