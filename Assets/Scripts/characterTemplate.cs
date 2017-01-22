@@ -13,6 +13,11 @@ public class characterTemplate : MonoBehaviour
     [Range(1,10)]
     int m_currentLife;
 
+	// Movement parameters
+	public float moveSpeed;
+	public float turnSpeed;
+	protected Rigidbody rb;
+
     public int currentLife
     {
         get {return m_currentLife; }

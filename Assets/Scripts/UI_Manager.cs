@@ -21,7 +21,8 @@ public class UI_Manager : MonoBehaviour {
 	}
 
 	// Use this for initialization
-	void Start () {
+	void Start ()
+	{
 		if (instance)
 		{
 			DestroyImmediate(gameObject);
@@ -39,7 +40,8 @@ public class UI_Manager : MonoBehaviour {
 		for (int i = 0; i < HUD_Skills.Length; i++)
 		{
 			HUD_Skills[i] = GameObject.Find("HUD_" + ((ElementalType.Element)i).ToString());
-			HUD_Skills[i].GetComponentInChildren<Text>().text = ((ElementalType.Element)i).ToString();
+			HUD_Skills[i].GetComponent<Image>().color = new Color(1f, 1f, 1f, 0.3f);
+			//HUD_Skills[i].GetComponentInChildren<Text>().text = ((ElementalType.Element)i).ToString();
 			//Debug.Log(((ElementalType.Element)i).ToString());
 		}
 		
@@ -131,5 +133,18 @@ public class UI_Manager : MonoBehaviour {
 	{
 		player.currentBulletType = (bulletsType)newType;
 		Debug.Log("Player's current bullet type: " + player.currentBulletType.ToString());
+
+		Color transparent = Color.white;
+		transparent.a = 0.3f;
+		//SetBulletType((ElementalType.Element)newType);
+		for (int i = 0; i < HUD_Skills.Length; i++)
+		{
+			if (i == (int)newType)
+			{
+				HUD_Skills[i].GetComponent<Image>().color = Color.white;
+			}
+			else
+				HUD_Skills[i].GetComponent<Image>().color = transparent;
+		}
 	}
 }

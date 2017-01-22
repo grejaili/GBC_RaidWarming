@@ -10,7 +10,6 @@ public class WaveForm : MonoBehaviour {
 	public float killCheckInterval = 0.5f;
 	public ParticleSystem waveParticles;
 
-
 	float timer = 0.0f;
 	float waveSize = 0.0f;
 	float timeAlive = 0.0f;
@@ -31,10 +30,13 @@ public class WaveForm : MonoBehaviour {
 	void Update ()
 	{
 		// Wave Propagation
-
 		waveSize = Mathf.Lerp(waveSize, waveRange, Time.deltaTime * (waveSpeed / 2));
 		//Debug.DrawRay(transform.position, Vector3.forward * waveSize, Color.white);
-		if(destroyedByPlayer)
+		//Debug.DrawRay(transform.position, Vector3.right * waveSize, Color.white);
+		//Debug.DrawRay(transform.position, -Vector3.forward * waveSize, Color.white);
+		//Debug.DrawRay(transform.position, -Vector3.right * waveSize, Color.white);
+
+		if (destroyedByPlayer)
 		{
 			// Kill Check
 			timer += Time.deltaTime;
@@ -45,7 +47,7 @@ public class WaveForm : MonoBehaviour {
 				{
 					if (c.GetComponentInParent<EnemyMovement>())
 					{
-						if (ElementalType.GetCounterElement(c.GetComponentInParent<EnemyMovement>().GetType()) == this.elementalType)
+						if (c.gameObject.GetComponentInParent<EnemyMovement>().GetType() == this.elementalType)
 						{
 							c.GetComponentInParent<EnemyMovement>().Explode(true);
 						}
@@ -59,15 +61,16 @@ public class WaveForm : MonoBehaviour {
 		// Handle Lifespan
 		timeAlive += Time.deltaTime;
 		if (timeAlive >= lifeTime)
-
 		{
-			Debug.Log("/// timed out");
+			//Debug.Log("/// timed out");
+			//gameObject.SetActive(false);
 			Destroy(gameObject);
 		}
 
 		if (waveSize >= waveRange - 0.5f)
 		{
-			Debug.Log("/// wave ranged out");
+			//Debug.Log("/// wave ranged out");
+			//gameObject.SetActive(false);
 			Destroy(gameObject);
 		}
 	}
