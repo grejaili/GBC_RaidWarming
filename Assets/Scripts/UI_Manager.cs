@@ -76,7 +76,7 @@ public class UI_Manager : MonoBehaviour {
     {
 		if (instance && instance.HUD_ComboCounter.GetComponent<Text>())
 		{
-		    string comboStatus = " Hit Combo!";
+		    //string comboStatus = " Hit Combo!";
 			instance.comboCounter += 1;
 			instance.HUD_ComboCounter.GetComponent<Text>().text = instance.comboCounter.ToString();
 		}
@@ -136,7 +136,7 @@ public class UI_Manager : MonoBehaviour {
 		//Debug.Log("Player's current bullet type: " + player.currentBulletType.ToString());
 
 		Color transparent = Color.white;
-		transparent.a = 0.8f;
+		transparent.a = 0.2f;
 		//SetBulletType((ElementalType.Element)newType);
 		for (int i = 0; i < HUD_Skills.Length; i++)
 		{

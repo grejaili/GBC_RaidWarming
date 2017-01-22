@@ -111,9 +111,9 @@ public class EnemyMovement : characterTemplate {
 
 	public void Explode(bool destroyedByPlayer)
 	{
-		GameObject newWave = (GameObject)Instantiate(Wave, 
-								transform.position + Vector3.up * (transform.localScale.y / 2),
-								Quaternion.identity);
+		GameObject newWave = Instantiate(Wave, 
+										transform.position + Vector3.up * (transform.localScale.y / 2),
+										Quaternion.identity);
 		if (newWave)
 		{
 			newWave.GetComponent<WaveForm>().destroyedByPlayer = destroyedByPlayer;
@@ -122,7 +122,6 @@ public class EnemyMovement : characterTemplate {
 			if(destroyedByPlayer)
 			{
 				UI_Manager.UpdateComboPoints();
-				
 			}
 			newWave.GetComponent<WaveForm>().SetElement(element);
 			gameObject.SetActive(false);

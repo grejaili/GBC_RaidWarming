@@ -131,8 +131,9 @@ public class GameManager : MonoBehaviour {
 		float theta = Random.Range(0.0f, 360.0f);
 		int enemyTypeToSpawn = Random.Range(0, enemies.Length);
 		//Debug.Log(theta);
-		float x = transform.position.x + radius * Mathf.Cos(theta * Mathf.Deg2Rad);
-		float z = transform.position.z + radius * Mathf.Sin(theta * Mathf.Deg2Rad);
+		float rando = Random.Range(radius / 2, radius * 2);
+		float x = transform.position.x + rando * Mathf.Cos(theta * Mathf.Deg2Rad);
+		float z = transform.position.z + rando * Mathf.Sin(theta * Mathf.Deg2Rad);
 
 		Vector3 spawnLocation = new Vector3(x, 0.0f, z);
 

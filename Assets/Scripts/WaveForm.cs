@@ -90,7 +90,7 @@ public class WaveForm : MonoBehaviour {
 		{
 			waveParticles = Instantiate(particleArray[(int)elementalType],
 									gameObject.transform.position,
-									Quaternion.Euler(90, 0, 0),
+									Quaternion.Euler(-90, 0, 0),
 									this.transform);
 		}
 		
