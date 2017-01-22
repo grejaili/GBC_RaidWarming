@@ -81,6 +81,11 @@ public class GameManager : MonoBehaviour {
 			UI_Manager.instance.SetBulletType(3);
 		}
 
+		if(Input.GetKeyDown(KeyCode.Escape))
+		{
+			Application.Quit();
+		}
+
 		// Scroll to Change Weapon
 		if (Input.GetAxis("Mouse ScrollWheel") > 0)
 		{
@@ -98,7 +103,7 @@ public class GameManager : MonoBehaviour {
 		}
 		else if (Input.GetAxis("Mouse ScrollWheel") < 0)
 		{
-			Debug.Log(UI_Manager.instance.GetBulletType());
+			//Debug.Log(UI_Manager.instance.GetBulletType());
 
 			if (UI_Manager.instance.GetBulletType() > 0)
 			{
@@ -181,18 +186,18 @@ public class GameManager : MonoBehaviour {
 
 	public void OnSceneTransition()
 	{
-		Debug.Log("This should appear every time the player dies");
+		//Debug.Log("This should appear every time the player dies");
 		// Create host of enemies in the wing
 		enemyPopulation.Clear();
-			for (int i = 0; i < maxPopulation; i++)
-			{
-					int enemyType = Random.Range(0, enemies.Length);
-					GameObject enemy = Instantiate(enemies[enemyType]);
-					enemy.SetActive(false);
-					enemyPopulation.Add(enemy);
-			}
+		for (int i = 0; i < maxPopulation; i++)
+		{
+				int enemyType = Random.Range(0, enemies.Length);
+				GameObject enemy = Instantiate(enemies[enemyType]);
+				enemy.SetActive(false);
+				enemyPopulation.Add(enemy);
+		}
 
-			Debug.Log(SceneManager.GetActiveScene().name);
+		//Debug.Log(SceneManager.GetActiveScene().name);
 	}
 	public static GameManager instance
 	{

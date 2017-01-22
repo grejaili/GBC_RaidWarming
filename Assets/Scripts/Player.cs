@@ -53,10 +53,6 @@ public class Player : characterTemplate
     [SerializeField]
     bulletDetails[] bulletsType;
 
-	// Aim Line
-	LineRenderer aimLine;
-	Vector3 aimPoint;
-
 	public float maxDistFromOrigin = 73;
 	public float forceBounce = 5;
 	Vector3 origin = Vector3.zero;
@@ -72,7 +68,6 @@ public class Player : characterTemplate
 	{
 		origin = Vector3.zero;
 		rb = GetComponent<Rigidbody>();
-		aimLine = GetComponent<LineRenderer>();
 		audioComp = GetComponent<AudioSource>();
 	}
 
@@ -92,7 +87,7 @@ public class Player : characterTemplate
         }
 
 		// Shooting
-        if (Input.GetButton("Fire2") && ableToShoot)
+        if (Input.GetButton("Fire1") && ableToShoot)
         {
 			audioComp.Play();
 
@@ -120,12 +115,8 @@ public class Player : characterTemplate
         RaycastHit hit;
         if (Physics.Raycast(ray, out hit, 1000f, this.groundMasks))
         {
-			aimPoint = hit.point;
             transform.LookAt(new Vector3(hit.point.x, transform.position.y, hit.point.z));
         }
-
-		aimLine.SetPosition(0, transform.position);
-		aimLine.SetPosition(1, aimPoint);
 
 		// Moving
 		PlayerPilot();

@@ -61,6 +61,7 @@ public class UI_Manager : MonoBehaviour {
 	{
 		if(!initializedScene && SceneManager.GetActiveScene().buildIndex == 1)
 		{
+
 			player = GameObject.Find("Player").GetComponent<Player>();
 			
 			HUD_ComboCounter = GameObject.Find("HUD_Combo");
@@ -75,7 +76,7 @@ public class UI_Manager : MonoBehaviour {
 
 			if (specialThreshold == 0)
 			{
-				Debug.Log("specialThreshold not set in inspector, defaulting to 6");
+				//Debug.Log("specialThreshold not set in inspector, defaulting to 6");
 				specialThreshold = 6;
 			}
 			GameManager.instance.OnSceneTransition();
@@ -128,35 +129,7 @@ public class UI_Manager : MonoBehaviour {
 	}
 
 
-	public void SelectSkillOne()
-    {
-        //player.currentBulletType = ;
-        Debug.Log("SKill ONe");
-       
-    }
-
-    public void SelectSkillTwo()
-    {
-        player.currentBulletType = bulletsType.Earth;
-        Debug.Log("SKill two");
-
-    }
-
-
-    public void SelectSkillThree()
-    {
-        player.currentBulletType = bulletsType.Fire;
-        Debug.Log("SKill three");
-
-    }
-
-
-    public void SelectSkillFour()
-    {
-        player.currentBulletType = bulletsType.Air;
-        Debug.Log("SKill Four");
-
-    }
+	
 
 	// Workaround for unity's inspector not allowing enums as parameters for a function call...
 	// 0 = Fire, 1 = Earth, 2 = Air , 3 = Water
