@@ -18,6 +18,7 @@ public class GameManager : MonoBehaviour {
 	List<GameObject> enemyPopulation;
 	List<GameObject> wavePopulation;
 
+   public static  bool gamePaused = false;
 
 	// Use this for initialization
 	void Start ()
@@ -83,8 +84,21 @@ public class GameManager : MonoBehaviour {
 
 		if(Input.GetKeyDown(KeyCode.Escape))
 		{
-			Application.Quit();
-		}
+           if (gamePaused == false)
+            {
+                gamePaused = true;
+                Player.ableToShoot = false;
+                Time.timeScale = 0;
+
+            }
+      else
+            {
+
+                Player.ableToShoot = true;
+                gamePaused = false;
+                Time.timeScale = 1;
+            }
+        }
 
 		// Scroll to Change Weapon
 		if (Input.GetAxis("Mouse ScrollWheel") > 0)
@@ -186,8 +200,6 @@ public class GameManager : MonoBehaviour {
 
 	public void OnSceneTransition()
 	{
-		//Debug.Log("This should appear every time the player dies");
-		// Create host of enemies in the wing
 		enemyPopulation.Clear();
 		for (int i = 0; i < maxPopulation; i++)
 		{
