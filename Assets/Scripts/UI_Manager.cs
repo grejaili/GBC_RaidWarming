@@ -34,61 +34,36 @@ public class UI_Manager : MonoBehaviour {
 		else
 		{
 			instance = this;
-
-			DontDestroyOnLoad(this);
+          
+            DontDestroyOnLoad(this);
 		}
-
-		//player = GameObject.FindGameObjectWithTag("Player").GetComponent<Player>();
-		//HUD_ComboCounter = GameObject.Find("HUD_Combo");
-		//HUD_ComboCounter.GetComponent<Text>().text = "";
-		//for (int i = 0; i < HUD_Skills.Length; i++)
-		//{
-		//	HUD_Skills[i] = GameObject.Find("HUD_" + ((ElementalType.Element)i).ToString());
-		//	HUD_Skills[i].GetComponent<Image>().color = new Color(1f, 1f, 1f, 0.3f);
-		//	//HUD_Skills[i].GetComponentInChildren<Text>().text = ((ElementalType.Element)i).ToString();
-		//	//Debug.Log(((ElementalType.Element)i).ToString());
-		//}
-		
-		//if(specialThreshold == 0)
-		//{
-		//	//Debug.Log("specialThreshold not set in inspector, defaulting to 6");
-		//	specialThreshold = 6;
-		//}
-  //     // comboPointsText = GameObject.FindGameObjectWithTag("ComboPointText");  
-	}
+   
+    }
 
 	void Update()
-	{
-		if(!initializedScene && SceneManager.GetActiveScene().buildIndex == 1)
-		{
-
-			player = GameObject.Find("Player").GetComponent<Player>();
-			
-			HUD_ComboCounter = GameObject.Find("HUD_Combo");
-			HUD_ComboCounter.GetComponent<Text>().text = "";
-			for (int i = 0; i < HUD_Skills.Length; i++)
-			{
-				HUD_Skills[i] = GameObject.Find("HUD_" + ((ElementalType.Element)i).ToString());
-				HUD_Skills[i].GetComponent<Image>().color = new Color(1f, 1f, 1f, 0.3f);
-				//HUD_Skills[i].GetComponentInChildren<Text>().text = ((ElementalType.Element)i).ToString();
-				//Debug.Log(((ElementalType.Element)i).ToString());
-			}
-
-			if (specialThreshold == 0)
-			{
-				//Debug.Log("specialThreshold not set in inspector, defaulting to 6");
-				specialThreshold = 6;
-			}
-			GameManager.instance.OnSceneTransition();
-			initializedScene = true;
-		}
-	
-	}
-
-	public void Shoot()
     {
-        Debug.Log("Call shoot function on player");
+        if (!initializedScene && SceneManager.GetActiveScene().buildIndex == 1)
+        {
+
+            player = GameObject.Find("Player").GetComponent<Player>();
+
+            HUD_ComboCounter = GameObject.Find("HUD_Combo");
+            HUD_ComboCounter.GetComponent<Text>().text = "";
+            for (int i = 0; i < HUD_Skills.Length; i++)
+            {
+               HUD_Skills[i] = GameObject.Find("HUD_" + ((ElementalType.Element)i).ToString());
+               HUD_Skills[i].GetComponent<Image>().color = new Color(1f, 1f, 1f, 0.3f);
+            }
+            if (specialThreshold == 0)
+            {
+                specialThreshold = 6;
+            }
+            GameManager.instance.OnSceneTransition();
+            initializedScene = true;
+        }
+
     }
+
 
     public void PauseButton()
     {

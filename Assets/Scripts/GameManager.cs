@@ -50,12 +50,24 @@ public class GameManager : MonoBehaviour {
 			Debug.Log("Spawn rate not set in inspector, defaulting to 4.0f");
 			spawnRateInSeconds = 4.0f;
 		}
-	}
 
-	// Update is called once per frame
-	void Update()
+
+
+    }
+
+    bool UISetted = false;
+    void SetUI()
+    {
+        UI_Manager.instance.SetBulletType(0);
+        UISetted = true;
+    }
+
+    // Update is called once per frame
+    void Update()
 	{
 		timeSinceLastSpawn += Time.deltaTime;
+
+
 
 		if (timeSinceLastSpawn >= spawnRateInSeconds)
 		{
@@ -63,6 +75,11 @@ public class GameManager : MonoBehaviour {
 			timeSinceLastSpawn = 0.0f;
 			SpawnEnemy(2);
 		}
+        // set the button on the UI
+        if (UISetted == false)
+        {
+            SetUI();
+        }
 
 		// Num keys to Change Weapon
 		if (Input.GetKeyDown(KeyCode.Alpha1))
