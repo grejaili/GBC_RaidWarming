@@ -19,17 +19,17 @@ public class GameManager : MonoBehaviour {
 	List<GameObject> wavePopulation;
 
    public static  bool gamePaused = false;
-
-	// Use this for initialization
-	void Start ()
+    [SerializeField]
+    private AudioSource switchWeapon;
+    // Use this for initialization
+    void Start ()
 	{
 		enemyPopulation = new List<GameObject>();
 		wavePopulation = new List<GameObject>();
-
-		
-
-		// Checks if a GameManager exists, and destroys the second copy.
-		if (instance)
+   
+        
+        // Checks if a GameManager exists, and destroys the second copy.
+        if (instance)
 		{
 			DestroyImmediate(gameObject);
 		}
@@ -84,19 +84,24 @@ public class GameManager : MonoBehaviour {
 		// Num keys to Change Weapon
 		if (Input.GetKeyDown(KeyCode.Alpha1))
 		{
-			UI_Manager.instance.SetBulletType(0);
+            switchWeapon.Play();
+            UI_Manager.instance.SetBulletType(0);
 		}
 		if (Input.GetKeyDown(KeyCode.Alpha2))
 		{
-			UI_Manager.instance.SetBulletType(1);
+
+            switchWeapon.Play();
+            UI_Manager.instance.SetBulletType(1);
 		}
 		if (Input.GetKeyDown(KeyCode.Alpha3))
-		{
-			UI_Manager.instance.SetBulletType(2);
+        {
+            switchWeapon.Play();
+            UI_Manager.instance.SetBulletType(2);
 		}
 		if (Input.GetKeyDown(KeyCode.Alpha4))
-		{
-			UI_Manager.instance.SetBulletType(3);
+        {
+            switchWeapon.Play();
+            UI_Manager.instance.SetBulletType(3);
 		}
 
 		if(Input.GetKeyDown(KeyCode.Escape))
@@ -120,9 +125,9 @@ public class GameManager : MonoBehaviour {
 		// Scroll to Change Weapon
 		if (Input.GetAxis("Mouse ScrollWheel") > 0)
 		{
-			Debug.Log(UI_Manager.instance.GetBulletType());
 
-			if (UI_Manager.instance.GetBulletType() < 3)
+            switchWeapon.Play();
+            if (UI_Manager.instance.GetBulletType() < 3)
 			{
 				UI_Manager.instance.SetBulletType(
 									UI_Manager.instance.GetBulletType() + 1);
@@ -134,9 +139,9 @@ public class GameManager : MonoBehaviour {
 		}
 		else if (Input.GetAxis("Mouse ScrollWheel") < 0)
 		{
-			//Debug.Log(UI_Manager.instance.GetBulletType());
-
-			if (UI_Manager.instance.GetBulletType() > 0)
+            //Debug.Log(UI_Manager.instance.GetBulletType());
+            switchWeapon.Play();
+            if (UI_Manager.instance.GetBulletType() > 0)
 			{
 				UI_Manager.instance.SetBulletType(
 									UI_Manager.instance.GetBulletType() - 1);
@@ -202,7 +207,7 @@ public class GameManager : MonoBehaviour {
 						float x = transform.position.x + rando * Mathf.Cos(theta * Mathf.Deg2Rad);
 						float z = transform.position.z + rando * Mathf.Sin(theta * Mathf.Deg2Rad);
 
-						Vector3 spawnLocation = new Vector3(x, 0.0f, z);
+						Vector3 spawnLocation = new Vector3(x+this.transform.position.x+60, 0.0f, z+this.transform.position.z+60);
 						GameObject newEnemy = enemyPopulation[j];
 						newEnemy.transform.position = spawnLocation;
 						newEnemy.SetActive(true);

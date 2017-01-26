@@ -94,7 +94,7 @@ public class Player : characterTemplate
 			audioComp.Play();
 
 			GameObject bullet = (GameObject)Instantiate(bulletsType[(int)currentBulletType].bulletPrefab,  bulletSpawn.transform.position, bulletSpawn.transform.rotation);
-			bullet.GetComponent<bulletTemplate>().StartBullet(transform.forward, 70f); //bulletsType[(int)currentBulletType].bulletSpeed);
+			bullet.GetComponent<bulletTemplate>().StartBullet(transform.forward, 70); //bulletsType[(int)currentBulletType].bulletSpeed);
 
             ableToShoot = false;
 
@@ -119,7 +119,7 @@ public class Player : characterTemplate
             RaycastHit hit;
             if (Physics.Raycast(ray, out hit, 1000f, this.groundMasks))
             {
-                transform.LookAt(new Vector3(hit.point.x, transform.position.y, hit.point.z));
+                transform.LookAt(new Vector3(hit.point.x,0, hit.point.z));
             }
         }
 		// Moving

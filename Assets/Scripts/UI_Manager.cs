@@ -16,7 +16,7 @@ public class UI_Manager : MonoBehaviour {
 	private Player player;
 	private GameObject HUD_ComboCounter;
 	private GameObject[] HUD_Skills = new GameObject[4];
-
+    
 	public static UI_Manager _instance = null;
 	public static UI_Manager instance
 	{
@@ -37,7 +37,7 @@ public class UI_Manager : MonoBehaviour {
           
             DontDestroyOnLoad(this);
 		}
-   
+
     }
 
 	void Update()
