@@ -18,18 +18,25 @@ public class GameManager : MonoBehaviour {
 	List<GameObject> enemyPopulation;
 	List<GameObject> wavePopulation;
 
-   public static  bool gamePaused = false;
-    [SerializeField]
-    private AudioSource switchWeapon;
-    // Use this for initialization
-    void Start ()
+	GameObject player;
+	bool bScrolling = false;
+	float lastScrollTime = 0.0f;
+
+	public static bool gamePaused = false;
+
+	private AudioSource switchWeapon;
+	bool UISetted = false;
+
+	// Use this for initialization
+	void Start ()
 	{
 		enemyPopulation = new List<GameObject>();
 		wavePopulation = new List<GameObject>();
-   
-        
-        // Checks if a GameManager exists, and destroys the second copy.
-        if (instance)
+		player = FindObjectOfType<Player>().gameObject;
+		switchWeapon = GetComponent<AudioSource>();
+
+		// Checks if a GameManager exists, and destroys the second copy.
+		if (instance)
 		{
 			DestroyImmediate(gameObject);
 		}
@@ -50,12 +57,9 @@ public class GameManager : MonoBehaviour {
 			Debug.Log("Spawn rate not set in inspector, defaulting to 4.0f");
 			spawnRateInSeconds = 4.0f;
 		}
-
-
-
     }
 
-    bool UISetted = false;
+    
     void SetUI()
     {
         UI_Manager.instance.SetBulletType(0);
@@ -66,8 +70,6 @@ public class GameManager : MonoBehaviour {
     void Update()
 	{
 		timeSinceLastSpawn += Time.deltaTime;
-
-
 
 		if (timeSinceLastSpawn >= spawnRateInSeconds)
 		{
@@ -84,7 +86,7 @@ public class GameManager : MonoBehaviour {
 		// Num keys to Change Weapon
 		if (Input.GetKeyDown(KeyCode.Alpha1))
 		{
-            switchWeapon.Play();
+			switchWeapon.Play();
             UI_Manager.instance.SetBulletType(0);
 		}
 		if (Input.GetKeyDown(KeyCode.Alpha2))
@@ -111,11 +113,9 @@ public class GameManager : MonoBehaviour {
                 gamePaused = true;
                 Player.ableToShoot = false;
                 Time.timeScale = 0;
-
             }
-      else
+			else
             {
-
                 Player.ableToShoot = true;
                 gamePaused = false;
                 Time.timeScale = 1;
@@ -123,8 +123,10 @@ public class GameManager : MonoBehaviour {
         }
 
 		// Scroll to Change Weapon
-		if (Input.GetAxis("Mouse ScrollWheel") > 0)
+		if (Input.GetAxis("Mouse ScrollWheel") > 0 && !bScrolling)
 		{
+
+			bScrolling = true;
 
             switchWeapon.Play();
             if (UI_Manager.instance.GetBulletType() < 3)
@@ -136,9 +138,15 @@ public class GameManager : MonoBehaviour {
 			{
 				UI_Manager.instance.SetBulletType(0);
 			}
+
+			lastScrollTime = Time.time;
 		}
-		else if (Input.GetAxis("Mouse ScrollWheel") < 0)
+		else if (Input.GetAxis("Mouse ScrollWheel") < 0 && !bScrolling)
 		{
+			bScrolling = true;
+
+			if (UI_Manager.instance.GetBulletType() > 0)
+
             //Debug.Log(UI_Manager.instance.GetBulletType());
             switchWeapon.Play();
             if (UI_Manager.instance.GetBulletType() > 0)
@@ -150,6 +158,13 @@ public class GameManager : MonoBehaviour {
 			{
 				UI_Manager.instance.SetBulletType(3);
 			}
+
+			lastScrollTime = Time.time;
+		}
+		else if (Input.GetAxis("Mouse ScrollWheel") == 0) /// not scrolling
+		{
+			if (Time.time >= lastScrollTime + 0.15f)
+				bScrolling = false;
 		}
 
 	}
@@ -190,7 +205,6 @@ public class GameManager : MonoBehaviour {
 	/// 
 	void SpawnEnemy(uint numberOfEnemiesToSpawn)
 	{
-		
 		if (SceneManager.GetActiveScene().buildIndex == 1)
 		{
 			//Vector3 lastSpawnLocation = new Vector3();
@@ -204,10 +218,14 @@ public class GameManager : MonoBehaviour {
 						float theta = Random.Range(0.0f, 360.0f);
 						int enemyTypeToSpawn = Random.Range(0, enemies.Length);
 						float rando = Random.Range(radius / 2, radius * 2);
+
+						// Prepare spawn position
 						float x = transform.position.x + rando * Mathf.Cos(theta * Mathf.Deg2Rad);
 						float z = transform.position.z + rando * Mathf.Sin(theta * Mathf.Deg2Rad);
+						Vector3 toPlayer = Vector3.ProjectOnPlane(player.transform.position - transform.position, Vector3.forward);
 
 						Vector3 spawnLocation = new Vector3(x+this.transform.position.x+60, 0.0f, z+this.transform.position.z+60);
+
 						GameObject newEnemy = enemyPopulation[j];
 						newEnemy.transform.position = spawnLocation;
 						newEnemy.SetActive(true);

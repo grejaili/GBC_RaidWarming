@@ -17,8 +17,8 @@ public class UI_Manager : MonoBehaviour {
 	private Animator anim;
 	private Player player;
 	private GameObject HUD_ComboCounter;
-	private GameObject[] HUD_Skills = new GameObject[4];
-    
+	private GameObject[] HUD_Skills;
+
 	public static UI_Manager _instance = null;
 	public static UI_Manager instance
 	{
@@ -29,6 +29,11 @@ public class UI_Manager : MonoBehaviour {
 	// Use this for initialization
 	void Start ()
 	{
+<<<<<<< HEAD
+=======
+		player = GameObject.Find("Player").GetComponent<Player>();
+		HUD_Skills = new GameObject[4];
+>>>>>>> refs/remotes/origin/master
 
 		if (instance)
 		{
@@ -41,7 +46,58 @@ public class UI_Manager : MonoBehaviour {
             DontDestroyOnLoad(this);
 		}
 
-    }
+
+		// Initialize Hud parts
+		for (int i = 0; i < HUD_Skills.Length; i++)
+		{
+			HUD_Skills[i] = GameObject.Find("HUD_" + ((ElementalType.Element)i).ToString());
+			HUD_Skills[i].GetComponent<Image>().color = new Color(1f, 1f, 1f, 0.3f);
+			//Debug.Log("Set HUD_SKILL");
+			//HUD_Skills[i].GetComponentInChildren<Text>().text = ((ElementalType.Element)i).ToString();
+			//Debug.Log(((ElementalType.Element)i).ToString());
+		}
+
+		SetBulletType(ElementalType.Element.Fire);
+
+		//player = GameObject.FindGameObjectWithTag("Player").GetComponent<Player>();
+		//HUD_ComboCounter = GameObject.Find("HUD_Combo");
+		//HUD_ComboCounter.GetComponent<Text>().text = "";
+		//for (int i = 0; i < HUD_Skills.Length; i++)
+		//{
+		//	HUD_Skills[i] = GameObject.Find("HUD_" + ((ElementalType.Element)i).ToString());
+		//	HUD_Skills[i].GetComponent<Image>().color = new Color(1f, 1f, 1f, 0.3f);
+		//	//HUD_Skills[i].GetComponentInChildren<Text>().text = ((ElementalType.Element)i).ToString();
+		//	//Debug.Log(((ElementalType.Element)i).ToString());
+		//}
+
+		//if(specialThreshold == 0)
+		//{
+		//	//Debug.Log("specialThreshold not set in inspector, defaulting to 6");
+		//	specialThreshold = 6;
+		//}
+		//     // comboPointsText = GameObject.FindGameObjectWithTag("ComboPointText");  
+	}
+
+	//void Update()
+	//{
+	//	if(!initializedScene && SceneManager.GetActiveScene().buildIndex == 1)
+	//	{
+	//		if (!player)
+	//			player = GameObject.Find("Player").GetComponent<Player>();
+			
+	//		HUD_ComboCounter = GameObject.Find("HUD_Combo");
+	//		HUD_ComboCounter.GetComponent<Text>().text = "";
+			
+	//		if (specialThreshold == 0)
+	//		{
+	//			//Debug.Log("specialThreshold not set in inspector, defaulting to 6");
+	//			specialThreshold = 6;
+	//		}
+	//		GameManager.instance.OnSceneTransition();
+	//		initializedScene = true;
+	//	}
+	
+	//}
 
 	void Update()
     {
@@ -67,7 +123,6 @@ public class UI_Manager : MonoBehaviour {
             GameManager.instance.OnSceneTransition();
             initializedScene = true;
         }
-
     }
 
 
@@ -110,9 +165,6 @@ public class UI_Manager : MonoBehaviour {
 		
 	}
 
-
-	
-
 	// Workaround for unity's inspector not allowing enums as parameters for a function call...
 	// 0 = Fire, 1 = Earth, 2 = Air , 3 = Water
 	public void SetBulletType (int newType)
@@ -127,12 +179,12 @@ public class UI_Manager : MonoBehaviour {
 
 		Color transparent = Color.white;
 		transparent.a = 0.2f;
-		//SetBulletType((ElementalType.Element)newType);
+
 		for (int i = 0; i < HUD_Skills.Length; i++)
 		{
-			if (i == (int)newType)
+			if (i == (int)newType && HUD_Skills[i].GetComponentInChildren<Image>())
 			{
-				HUD_Skills[i].GetComponent<Image>().color = Color.white;
+				HUD_Skills[i].GetComponentInChildren<Image>().color = Color.white;
 				anim = HUD_Skills[i].GetComponentInChildren<Animator>();
 				anim.SetBool("showEffect", true);
 			}
