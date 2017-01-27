@@ -22,7 +22,7 @@ public enum bulletsType
 
 public class Player : characterTemplate 
 {
-    bool ableToShoot = true;
+   public static bool ableToShoot = true;
 
 	public Vector3 GetPlayerFuturePos(float scalar)
 	{
@@ -52,7 +52,6 @@ public class Player : characterTemplate
 
     [SerializeField]
     bulletDetails[] bulletsType;
-
 	public float maxDistFromOrigin = 73;
 	public float forceBounce = 5;
 	Vector3 origin = Vector3.zero;
@@ -69,10 +68,12 @@ public class Player : characterTemplate
 	public Sprite airAura;
 	public Sprite waterAura;
 	SpriteRenderer auraRender;
-
+    
+    
 	// Use this for initialization
 	void Start ()
 	{
+       
 		origin = Vector3.zero;
 		rb = GetComponent<Rigidbody>();
 		audioComp = GetComponent<AudioSource>();
@@ -83,7 +84,7 @@ public class Player : characterTemplate
     {
         yield return new WaitForSeconds(bulletsType[(int)currentBulletType].coolDown);
 
-        this.ableToShoot = true;
+        ableToShoot = true;
     }
 
     void Update()
@@ -100,7 +101,7 @@ public class Player : characterTemplate
 			audioComp.Play();
 
 			GameObject bullet = (GameObject)Instantiate(bulletsType[(int)currentBulletType].bulletPrefab,  bulletSpawn.transform.position, bulletSpawn.transform.rotation);
-			bullet.GetComponent<bulletTemplate>().StartBullet(transform.forward, 70f); //bulletsType[(int)currentBulletType].bulletSpeed);
+			bullet.GetComponent<bulletTemplate>().StartBullet(transform.forward, 70); //bulletsType[(int)currentBulletType].bulletSpeed);
 
             ableToShoot = false;
 
@@ -128,14 +129,16 @@ public class Player : characterTemplate
             base.Explode();
             return;
         }
-
-        Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
-        RaycastHit hit;
-        if (Physics.Raycast(ray, out hit, 1000f, this.groundMasks))
+        // if game is paused do not move
+        if (GameManager.gamePaused == false)
         {
-            transform.LookAt(new Vector3(hit.point.x, transform.position.y, hit.point.z));
+            Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
+            RaycastHit hit;
+            if (Physics.Raycast(ray, out hit, 1000f, this.groundMasks))
+            {
+                transform.LookAt(new Vector3(hit.point.x,0, hit.point.z));
+            }
         }
-
 		// Moving
 		PlayerPilot();
 	}
@@ -157,6 +160,7 @@ public class Player : characterTemplate
 		//Debug.Log("dist: " + distToOrigin);
 
 		// Move Controls
+        
 		forward = Input.GetAxis("Vertical");
 		lateral = Input.GetAxis("Horizontal");
 		Vector3 forwardVector = Vector3.forward * moveSpeed * forward;

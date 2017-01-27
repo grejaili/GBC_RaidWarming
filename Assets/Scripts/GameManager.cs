@@ -22,6 +22,10 @@ public class GameManager : MonoBehaviour {
 	bool bScrolling = false;
 	float lastScrollTime = 0.0f;
 
+	public static bool gamePaused = false;
+
+	private AudioSource switchWeapon;
+	bool UISetted = false;
 
 	// Use this for initialization
 	void Start ()
@@ -29,6 +33,7 @@ public class GameManager : MonoBehaviour {
 		enemyPopulation = new List<GameObject>();
 		wavePopulation = new List<GameObject>();
 		player = FindObjectOfType<Player>().gameObject;
+		switchWeapon = GetComponent<AudioSource>();
 
 		// Checks if a GameManager exists, and destroys the second copy.
 		if (instance)
@@ -52,10 +57,17 @@ public class GameManager : MonoBehaviour {
 			Debug.Log("Spawn rate not set in inspector, defaulting to 4.0f");
 			spawnRateInSeconds = 4.0f;
 		}
-	}
+    }
 
-	// Update is called once per frame
-	void Update()
+    
+    void SetUI()
+    {
+        UI_Manager.instance.SetBulletType(0);
+        UISetted = true;
+    }
+
+    // Update is called once per frame
+    void Update()
 	{
 		timeSinceLastSpawn += Time.deltaTime;
 
@@ -65,36 +77,59 @@ public class GameManager : MonoBehaviour {
 			timeSinceLastSpawn = 0.0f;
 			SpawnEnemy(2);
 		}
+        // set the button on the UI
+        if (UISetted == false)
+        {
+            SetUI();
+        }
 
 		// Num keys to Change Weapon
 		if (Input.GetKeyDown(KeyCode.Alpha1))
 		{
-			UI_Manager.instance.SetBulletType(0);
+			switchWeapon.Play();
+            UI_Manager.instance.SetBulletType(0);
 		}
 		if (Input.GetKeyDown(KeyCode.Alpha2))
 		{
-			UI_Manager.instance.SetBulletType(1);
+
+            switchWeapon.Play();
+            UI_Manager.instance.SetBulletType(1);
 		}
 		if (Input.GetKeyDown(KeyCode.Alpha3))
-		{
-			UI_Manager.instance.SetBulletType(2);
+        {
+            switchWeapon.Play();
+            UI_Manager.instance.SetBulletType(2);
 		}
 		if (Input.GetKeyDown(KeyCode.Alpha4))
-		{
-			UI_Manager.instance.SetBulletType(3);
+        {
+            switchWeapon.Play();
+            UI_Manager.instance.SetBulletType(3);
 		}
 
 		if(Input.GetKeyDown(KeyCode.Escape))
 		{
-			Application.Quit();
-		}
+           if (gamePaused == false)
+            {
+                gamePaused = true;
+                Player.ableToShoot = false;
+                Time.timeScale = 0;
+            }
+			else
+            {
+                Player.ableToShoot = true;
+                gamePaused = false;
+                Time.timeScale = 1;
+            }
+        }
 
 		// Scroll to Change Weapon
 		if (Input.GetAxis("Mouse ScrollWheel") > 0 && !bScrolling)
 		{
+
 			bScrolling = true;
 
-			if (UI_Manager.instance.GetBulletType() < 3)
+            switchWeapon.Play();
+            if (UI_Manager.instance.GetBulletType() < 3)
 			{
 				UI_Manager.instance.SetBulletType(
 									UI_Manager.instance.GetBulletType() + 1);
@@ -111,6 +146,10 @@ public class GameManager : MonoBehaviour {
 			bScrolling = true;
 
 			if (UI_Manager.instance.GetBulletType() > 0)
+
+            //Debug.Log(UI_Manager.instance.GetBulletType());
+            switchWeapon.Play();
+            if (UI_Manager.instance.GetBulletType() > 0)
 			{
 				UI_Manager.instance.SetBulletType(
 									UI_Manager.instance.GetBulletType() - 1);
@@ -124,7 +163,7 @@ public class GameManager : MonoBehaviour {
 		}
 		else if (Input.GetAxis("Mouse ScrollWheel") == 0) /// not scrolling
 		{
-			if (Time.time >= lastScrollTime + 0.1f)
+			if (Time.time >= lastScrollTime + 0.15f)
 				bScrolling = false;
 		}
 
@@ -185,7 +224,8 @@ public class GameManager : MonoBehaviour {
 						float z = transform.position.z + rando * Mathf.Sin(theta * Mathf.Deg2Rad);
 						Vector3 toPlayer = Vector3.ProjectOnPlane(player.transform.position - transform.position, Vector3.forward);
 
-						Vector3 spawnLocation = new Vector3(x, 0.0f, z) + (-toPlayer * 0.5f);
+						Vector3 spawnLocation = new Vector3(x+this.transform.position.x+60, 0.0f, z+this.transform.position.z+60);
+
 						GameObject newEnemy = enemyPopulation[j];
 						newEnemy.transform.position = spawnLocation;
 						newEnemy.SetActive(true);
@@ -200,8 +240,6 @@ public class GameManager : MonoBehaviour {
 
 	public void OnSceneTransition()
 	{
-		//Debug.Log("This should appear every time the player dies");
-		// Create host of enemies in the wing
 		enemyPopulation.Clear();
 		for (int i = 0; i < maxPopulation; i++)
 		{
