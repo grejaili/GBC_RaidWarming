@@ -8,15 +8,17 @@ using UnityEngine.SceneManagement;
 public class UI_Manager : MonoBehaviour {
 
 	public uint specialThreshold;
+
 	private int comboCounter = 0;
-	private bool paused;
+    public static int scoreRef =0;
+    private bool paused;
 	public bool initializedScene = false;
 
 	private Animator anim;
 	private Player player;
 	private GameObject HUD_ComboCounter;
 	private GameObject[] HUD_Skills = new GameObject[4];
-
+    
 	public static UI_Manager _instance = null;
 	public static UI_Manager instance
 	{
@@ -27,6 +29,7 @@ public class UI_Manager : MonoBehaviour {
 	// Use this for initialization
 	void Start ()
 	{
+
 		if (instance)
 		{
 			DestroyImmediate(gameObject);
@@ -37,18 +40,21 @@ public class UI_Manager : MonoBehaviour {
           
             DontDestroyOnLoad(this);
 		}
-   
+
     }
 
 	void Update()
     {
         if (!initializedScene && SceneManager.GetActiveScene().buildIndex == 1)
         {
+    
 
             player = GameObject.Find("Player").GetComponent<Player>();
+            
 
             HUD_ComboCounter = GameObject.Find("HUD_Combo");
             HUD_ComboCounter.GetComponent<Text>().text = "";
+  
             for (int i = 0; i < HUD_Skills.Length; i++)
             {
                HUD_Skills[i] = GameObject.Find("HUD_" + ((ElementalType.Element)i).ToString());
@@ -85,6 +91,7 @@ public class UI_Manager : MonoBehaviour {
 		{
 		    //string comboStatus = " Hit Combo!";
 			instance.comboCounter += 1;
+            scoreRef = instance.comboCounter;
 			instance.HUD_ComboCounter.GetComponent<Text>().text = instance.comboCounter.ToString();
 		}
 		if (instance.comboCounter % instance.specialThreshold == 0)
@@ -168,10 +175,11 @@ public class UI_Manager : MonoBehaviour {
 	{
 		Debug.Log("We are in the beam!");
 		
-		SceneManager.LoadScene(1);
-	}
+	 SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
 
-	public void QuitGame()
+    }
+
+    public void QuitGame()
 	{
 		Debug.Log("I AM QUITTING THE BEAM");
 		Application.Quit();

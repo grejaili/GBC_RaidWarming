@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.SceneManagement;
+using UnityEngine.UI;
 
 [System.Serializable]
 class bulletDetails
@@ -62,7 +63,8 @@ public class Player : characterTemplate
 	float forward;
 	float lateral;
     // UI Manager
-    
+    [SerializeField]
+    GameObject GameOverScreen;
 	// Use this for initialization
 	void Start ()
 	{
@@ -94,7 +96,7 @@ public class Player : characterTemplate
 			audioComp.Play();
 
 			GameObject bullet = (GameObject)Instantiate(bulletsType[(int)currentBulletType].bulletPrefab,  bulletSpawn.transform.position, bulletSpawn.transform.rotation);
-			bullet.GetComponent<bulletTemplate>().StartBullet(transform.forward, 70f); //bulletsType[(int)currentBulletType].bulletSpeed);
+			bullet.GetComponent<bulletTemplate>().StartBullet(transform.forward, 70); //bulletsType[(int)currentBulletType].bulletSpeed);
 
             ableToShoot = false;
 
@@ -119,7 +121,10 @@ public class Player : characterTemplate
             RaycastHit hit;
             if (Physics.Raycast(ray, out hit, 1000f, this.groundMasks))
             {
-                transform.LookAt(new Vector3(hit.point.x, transform.position.y, hit.point.z));
+                    transform.LookAt(new Vector3(hit.point.x, 0f, hit.point.z));
+                 //   transform.Rotate(new Vector3(0, this.transform.rotation.y+ 8, 0));
+             
+
             }
         }
 		// Moving
@@ -130,8 +135,9 @@ public class Player : characterTemplate
 	{
 		if (col.gameObject.tag == "Enemy")
 		{
-			SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
-			UI_Manager.instance.initializedScene = false;
+            GameOverScreen.SetActive(true);
+       //     Time.timeScale = 0;
+            UI_Manager.instance.initializedScene = false;
 			Destroy(this.gameObject);
 		}
 	}

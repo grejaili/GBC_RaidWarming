@@ -93,8 +93,9 @@ public class EnemyMovement : characterTemplate {
 			if(destroyedByPlayer)
 			{
 				UI_Manager.UpdateComboPoints();
-			}
-			newWave.GetComponent<WaveForm>().SetElement(element);
+                EndGameMenu.score += 1; 
+            }
+            newWave.GetComponent<WaveForm>().SetElement(element);
 			gameObject.SetActive(false);
 		}
 	}

@@ -1,0 +1,5 @@
+W, A, S, D 		--movement
+left click 		--shoot
+1,2,3,4 / scroll wheel  --select elements
+
+Shoot enemies with a matching color to destroy them, try to create massive cascades!
