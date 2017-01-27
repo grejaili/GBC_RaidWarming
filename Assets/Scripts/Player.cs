@@ -121,10 +121,14 @@ public class Player : characterTemplate
             RaycastHit hit;
             if (Physics.Raycast(ray, out hit, 1000f, this.groundMasks))
             {
+<<<<<<< HEAD
                     transform.LookAt(new Vector3(hit.point.x, 0f, hit.point.z));
                  //   transform.Rotate(new Vector3(0, this.transform.rotation.y+ 8, 0));
              
 
+=======
+                transform.LookAt(new Vector3(hit.point.x,0, hit.point.z));
+>>>>>>> origin/Debugging_One
             }
         }
 		// Moving
