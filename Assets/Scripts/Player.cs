@@ -22,7 +22,7 @@ public enum bulletsType
 
 public class Player : characterTemplate 
 {
-    bool ableToShoot = true;
+   public static bool ableToShoot = true;
 
 	public Vector3 GetPlayerFuturePos(float scalar)
 	{
@@ -52,7 +52,6 @@ public class Player : characterTemplate
 
     [SerializeField]
     bulletDetails[] bulletsType;
-
 	public float maxDistFromOrigin = 73;
 	public float forceBounce = 5;
 	Vector3 origin = Vector3.zero;
@@ -63,19 +62,29 @@ public class Player : characterTemplate
 	float forward;
 	float lateral;
 
+	public int elementAura = 0;
+	public Sprite fireAura;
+	public Sprite earthAura;
+	public Sprite airAura;
+	public Sprite waterAura;
+	SpriteRenderer auraRender;
+    
+    
 	// Use this for initialization
 	void Start ()
 	{
+       
 		origin = Vector3.zero;
 		rb = GetComponent<Rigidbody>();
 		audioComp = GetComponent<AudioSource>();
+		auraRender = GameObject.Find("Aura").GetComponent<SpriteRenderer>();
 	}
 
-    IEnumerator shootBullet()
+	IEnumerator shootBullet()
     {
         yield return new WaitForSeconds(bulletsType[(int)currentBulletType].coolDown);
 
-        this.ableToShoot = true;
+        ableToShoot = true;
     }
 
     void Update()
@@ -92,7 +101,7 @@ public class Player : characterTemplate
 			audioComp.Play();
 
 			GameObject bullet = (GameObject)Instantiate(bulletsType[(int)currentBulletType].bulletPrefab,  bulletSpawn.transform.position, bulletSpawn.transform.rotation);
-			bullet.GetComponent<bulletTemplate>().StartBullet(transform.forward, 70f); //bulletsType[(int)currentBulletType].bulletSpeed);
+			bullet.GetComponent<bulletTemplate>().StartBullet(transform.forward, 70); //bulletsType[(int)currentBulletType].bulletSpeed);
 
             ableToShoot = false;
 
@@ -100,7 +109,17 @@ public class Player : characterTemplate
 
             StartCoroutine(shootBullet());
         }
-    }
+
+		// Handle Aura - ultra ghetto
+		int elemento = (int)currentBulletType;
+		switch (elemento)
+		{
+			case 0: auraRender.sprite = fireAura; break;
+			case 1: auraRender.sprite = earthAura; break;
+			case 2: auraRender.sprite = airAura; break;
+			case 3: auraRender.sprite = waterAura; break;
+		}
+	}
 	
 	// Update is called once per frame
 	void LateUpdate () 
@@ -110,14 +129,16 @@ public class Player : characterTemplate
             base.Explode();
             return;
         }
-
-        Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
-        RaycastHit hit;
-        if (Physics.Raycast(ray, out hit, 1000f, this.groundMasks))
+        // if game is paused do not move
+        if (GameManager.gamePaused == false)
         {
-            transform.LookAt(new Vector3(hit.point.x, transform.position.y, hit.point.z));
+            Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
+            RaycastHit hit;
+            if (Physics.Raycast(ray, out hit, 1000f, this.groundMasks))
+            {
+                transform.LookAt(new Vector3(hit.point.x,0, hit.point.z));
+            }
         }
-
 		// Moving
 		PlayerPilot();
 	}
@@ -139,6 +160,7 @@ public class Player : characterTemplate
 		//Debug.Log("dist: " + distToOrigin);
 
 		// Move Controls
+        
 		forward = Input.GetAxis("Vertical");
 		lateral = Input.GetAxis("Horizontal");
 		Vector3 forwardVector = Vector3.forward * moveSpeed * forward;
