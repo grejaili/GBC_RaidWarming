@@ -2,13 +2,17 @@
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
+using UnityEngine.SceneManagement;
+// Mitch Version
 
 public class UI_Manager : MonoBehaviour {
 
 	public uint specialThreshold;
 	private int comboCounter = 0;
 	private bool paused;
+	public bool initializedScene = false;
 
+	private Animator anim;
 	private Player player;
 	private GameObject HUD_ComboCounter;
 	private GameObject[] HUD_Skills = new GameObject[4];
@@ -34,26 +38,54 @@ public class UI_Manager : MonoBehaviour {
 			DontDestroyOnLoad(this);
 		}
 
-		player = GameObject.FindGameObjectWithTag("Player").GetComponent<Player>();
-		HUD_ComboCounter = GameObject.Find("HUD_Combo");
-		HUD_ComboCounter.GetComponent<Text>().text = "";
-		for (int i = 0; i < HUD_Skills.Length; i++)
-		{
-			HUD_Skills[i] = GameObject.Find("HUD_" + ((ElementalType.Element)i).ToString());
-			HUD_Skills[i].GetComponent<Image>().color = new Color(1f, 1f, 1f, 0.3f);
-			//HUD_Skills[i].GetComponentInChildren<Text>().text = ((ElementalType.Element)i).ToString();
-			//Debug.Log(((ElementalType.Element)i).ToString());
-		}
+		//player = GameObject.FindGameObjectWithTag("Player").GetComponent<Player>();
+		//HUD_ComboCounter = GameObject.Find("HUD_Combo");
+		//HUD_ComboCounter.GetComponent<Text>().text = "";
+		//for (int i = 0; i < HUD_Skills.Length; i++)
+		//{
+		//	HUD_Skills[i] = GameObject.Find("HUD_" + ((ElementalType.Element)i).ToString());
+		//	HUD_Skills[i].GetComponent<Image>().color = new Color(1f, 1f, 1f, 0.3f);
+		//	//HUD_Skills[i].GetComponentInChildren<Text>().text = ((ElementalType.Element)i).ToString();
+		//	//Debug.Log(((ElementalType.Element)i).ToString());
+		//}
 		
-		if(specialThreshold == 0)
+		//if(specialThreshold == 0)
+		//{
+		//	//Debug.Log("specialThreshold not set in inspector, defaulting to 6");
+		//	specialThreshold = 6;
+		//}
+  //     // comboPointsText = GameObject.FindGameObjectWithTag("ComboPointText");  
+	}
+
+	void Update()
+	{
+		if(!initializedScene && SceneManager.GetActiveScene().buildIndex == 1)
 		{
-			Debug.Log("specialThreshold not set in inspector, defaulting to 6");
-			specialThreshold = 6;
+
+			player = GameObject.Find("Player").GetComponent<Player>();
+			
+			HUD_ComboCounter = GameObject.Find("HUD_Combo");
+			HUD_ComboCounter.GetComponent<Text>().text = "";
+			for (int i = 0; i < HUD_Skills.Length; i++)
+			{
+				HUD_Skills[i] = GameObject.Find("HUD_" + ((ElementalType.Element)i).ToString());
+				HUD_Skills[i].GetComponent<Image>().color = new Color(1f, 1f, 1f, 0.3f);
+				//HUD_Skills[i].GetComponentInChildren<Text>().text = ((ElementalType.Element)i).ToString();
+				//Debug.Log(((ElementalType.Element)i).ToString());
+			}
+
+			if (specialThreshold == 0)
+			{
+				//Debug.Log("specialThreshold not set in inspector, defaulting to 6");
+				specialThreshold = 6;
+			}
+			GameManager.instance.OnSceneTransition();
+			initializedScene = true;
 		}
-       // comboPointsText = GameObject.FindGameObjectWithTag("ComboPointText");  
-	   }
 	
-    public void Shoot()
+	}
+
+	public void Shoot()
     {
         Debug.Log("Call shoot function on player");
     }
@@ -76,52 +108,29 @@ public class UI_Manager : MonoBehaviour {
     {
 		if (instance && instance.HUD_ComboCounter.GetComponent<Text>())
 		{
-			string comboStatus = " Hit Combo!";
+		    //string comboStatus = " Hit Combo!";
 			instance.comboCounter += 1;
-			instance.HUD_ComboCounter.GetComponent<Text>().text = instance.comboCounter.ToString() + comboStatus;
+			instance.HUD_ComboCounter.GetComponent<Text>().text = instance.comboCounter.ToString();
 		}
 		if (instance.comboCounter % instance.specialThreshold == 0)
 		{
-			Debug.Log("Some kinda special shit should happen.");
+			//Debug.Log("Some kinda special shit should happen.");
 		}
     }
 
 	public static void ResetComboPoints()
 	{
-		instance.HUD_ComboCounter.GetComponent<Text>().text = "";
-		instance.comboCounter = 0;
+		if (instance)
+		{
+			instance.HUD_ComboCounter.GetComponent<Text>().text = "";
+			instance.comboCounter = 0;
+		}
+		
 	}
 
 
-	public void SelectSkillOne()
-    {
-        //player.currentBulletType = ;
-        Debug.Log("SKill ONe");
-       
-    }
+	
 
-    public void SelectSkillTwo()
-    {
-        player.currentBulletType = bulletsType.Earth;
-        Debug.Log("SKill two");
-
-    }
-
-
-    public void SelectSkillThree()
-    {
-        player.currentBulletType = bulletsType.Fire;
-        Debug.Log("SKill three");
-
-    }
-
-
-    public void SelectSkillFour()
-    {
-        player.currentBulletType = bulletsType.Air;
-        Debug.Log("SKill Four");
-
-    }
 	// Workaround for unity's inspector not allowing enums as parameters for a function call...
 	// 0 = Fire, 1 = Earth, 2 = Air , 3 = Water
 	public void SetBulletType (int newType)
@@ -132,19 +141,64 @@ public class UI_Manager : MonoBehaviour {
 	public void SetBulletType (ElementalType.Element newType)
 	{
 		player.currentBulletType = (bulletsType)newType;
-		Debug.Log("Player's current bullet type: " + player.currentBulletType.ToString());
+		//Debug.Log("Player's current bullet type: " + player.currentBulletType.ToString());
 
 		Color transparent = Color.white;
-		transparent.a = 0.3f;
+		transparent.a = 0.2f;
 		//SetBulletType((ElementalType.Element)newType);
 		for (int i = 0; i < HUD_Skills.Length; i++)
 		{
 			if (i == (int)newType)
 			{
 				HUD_Skills[i].GetComponent<Image>().color = Color.white;
+				anim = HUD_Skills[i].GetComponentInChildren<Animator>();
+				anim.SetBool("showEffect", true);
 			}
 			else
+			{
 				HUD_Skills[i].GetComponent<Image>().color = transparent;
+				anim = HUD_Skills[i].GetComponentInChildren<Animator>();
+				anim.SetBool("showEffect", false);
+				anim.CrossFade("hideEffect", 0f);
+			}
 		}
+	}
+
+
+	public int GetBulletType()
+	{
+		string temp = player.currentBulletType.ToString();
+		switch(temp)
+		{
+			case "Fire":
+				temp = "0";
+				break;
+			case "Earth":
+				temp = "1";
+				break;
+			case "Air":
+				temp = "2";
+				break;
+			case "Water":
+				temp = "3";
+				break;
+			default:
+				temp = "0";
+				break;
+		}
+		return int.Parse(temp);
+	}
+
+	public void StartGame()
+	{
+		Debug.Log("We are in the beam!");
+		
+		SceneManager.LoadScene(1);
+	}
+
+	public void QuitGame()
+	{
+		Debug.Log("I AM QUITTING THE BEAM");
+		Application.Quit();
 	}
 }

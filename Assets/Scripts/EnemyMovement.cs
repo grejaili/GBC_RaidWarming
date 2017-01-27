@@ -5,6 +5,7 @@ public class EnemyMovement : characterTemplate {
 
 	//public enum EnemyType { Fire, Air, Earth, Water };
 	public Transform target;
+	public float speedGrowth = 1.1f;
 	public float predictiveScalar = 2;
     [SerializeField]
 	ElementalType.Element element;
@@ -12,36 +13,14 @@ public class EnemyMovement : characterTemplate {
 	Vector3 goalPosition;
 	float timeAlive;
 	float moveSpeedActual;
+	float turnSpeedActual;
 
 	void OnEnable()
 	{
-		int rando = Random.Range(0, 4);
-		switch (rando)
-		{
-			case 0:
-				element = ElementalType.Element.Fire;
-				GetComponentInChildren<MeshRenderer>().material.color = Color.red;
-				break;
-
-			case 1:
-				element = ElementalType.Element.Air;
-				GetComponentInChildren<MeshRenderer>().material.color = Color.white;
-				break;
-
-			case 2:
-				element = ElementalType.Element.Earth;
-				GetComponentInChildren<MeshRenderer>().material.color = Color.black;
-				break;
-
-			case 3:
-				element = ElementalType.Element.Water;
-				GetComponentInChildren<MeshRenderer>().material.color = Color.blue;
-				break;
-		}
-
 		rb = GetComponent<Rigidbody>();
 		rb.velocity = Vector3.zero;
 		moveSpeedActual = moveSpeed;
+		turnSpeedActual = turnSpeed;
 	}
 
 	void Start ()
@@ -51,20 +30,24 @@ public class EnemyMovement : characterTemplate {
 
 		rb = GetComponent<Rigidbody>();
 		moveSpeedActual = moveSpeed;
-		//Debug.Log(element.ToString());
+		turnSpeedActual = turnSpeed;
 	}
 	
 	
 	void Update ()
 	{
-		// Track lifetime
+		// Increase Speed and Turn
 		timeAlive += Time.deltaTime;
-		moveSpeedActual += Time.deltaTime * Time.deltaTime;
-		//Debug.Log(moveSpeedActual);
+		moveSpeedActual += Time.deltaTime * speedGrowth;
+		turnSpeedActual += Time.deltaTime * speedGrowth;
 
 		// Track player, predict movement
-		goalPosition = target.GetComponent<Player>().GetPlayerFuturePos(predictiveScalar);
-		ChasePlayer();
+		if (target)
+		{
+			goalPosition = target.GetComponent<Player>().GetPlayerFuturePos(predictiveScalar);
+			ChasePlayer();
+		}
+		
 	}
 
 
@@ -90,47 +73,36 @@ public class EnemyMovement : characterTemplate {
 				Explode(false);
 				UI_Manager.ResetComboPoints();
 				break;
-			case "Wave":
-				Explode(true);
-				break;
+			//case "Wave":
             case "Bullet":
 				checkType(c.gameObject);
 				break;
 		}
 	}
 
-	void OnDisable()
-	{
-		
-	}
 
 	public void Explode(bool destroyedByPlayer)
 	{
-		GameObject newWave = (GameObject)Instantiate(Wave, 
-								transform.position + Vector3.up * (transform.localScale.y / 2),
-								Quaternion.identity);
+		GameObject newWave = Instantiate(Wave, 
+										transform.position + Vector3.up * (transform.localScale.y / 2),
+										Quaternion.identity);
 		if (newWave)
 		{
 			newWave.GetComponent<WaveForm>().destroyedByPlayer = destroyedByPlayer;
-
-			//Debug.Log(this.gameObject.name + " element: " + this.element.ToString());
+			
 			if(destroyedByPlayer)
 			{
 				UI_Manager.UpdateComboPoints();
-				newWave.GetComponent<WaveForm>().SetElement(this.element);
 			}
-
+			newWave.GetComponent<WaveForm>().SetElement(element);
 			gameObject.SetActive(false);
 		}
 	}
 
     public void checkType(GameObject c)
     {
-        Debug.Log(this.gameObject.name + "hit by a " + c.gameObject.GetComponent<bulletTemplate>().elementType.ToString() + " element type");
-        Debug.Log(this.gameObject.name + " element type: " + this.element.ToString());
-		if (this.element == c.gameObject.GetComponent<bulletTemplate>().elementType)
+        if (element == c.gameObject.GetComponent<bulletTemplate>().elementType)
 		{
-            Debug.Log("hueuhehu");
             Explode(true);
         }
     }

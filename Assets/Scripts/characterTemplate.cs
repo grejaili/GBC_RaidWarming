@@ -64,8 +64,9 @@ public class characterTemplate : MonoBehaviour
         }
     }
 
+	
 
-    void Awake()
+	void Awake()
     {
         this.currentLife = this.maxLife;
     }

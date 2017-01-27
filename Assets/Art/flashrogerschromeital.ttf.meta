@@ -1,0 +1,21 @@
+fileFormatVersion: 2
+guid: e66b7ffaa1a68a646bc198b976d9d02d
+timeCreated: 1485069109
+licenseType: Free
+TrueTypeFontImporter:
+  serializedVersion: 4
+  fontSize: 16
+  forceTextureCase: -2
+  characterSpacing: 0
+  characterPadding: 1
+  includeFontData: 1
+  fontName: Flash Rogers Chrome Italic
+  fontNames:
+  - Flash Rogers Chrome Italic
+  fallbackFontReferences: []
+  customCharacters: 
+  fontRenderingMode: 0
+  ascentCalculationMode: 1
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 

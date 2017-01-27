@@ -1,14 +1,15 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 [System.Serializable]
 class bulletDetails
 {
     public GameObject bulletPrefab;
-    public float bulletSpeed = 50f;
-    public float coolDown    = 0.3f;
-    public float bulletDestroyTime = 2f;
+    public float bulletSpeed		= 1000f;
+    public float coolDown			= 0.3f;
+    public float bulletDestroyTime	= 2f;
 }
 
 public enum bulletsType
@@ -52,11 +53,22 @@ public class Player : characterTemplate
     [SerializeField]
     bulletDetails[] bulletsType;
 
+	public float maxDistFromOrigin = 73;
+	public float forceBounce = 5;
+	Vector3 origin = Vector3.zero;
+
+	// Gun Sound
+	AudioSource audioComp;
+
+	float forward;
+	float lateral;
+
 	// Use this for initialization
-	void Start () {
-
+	void Start ()
+	{
+		origin = Vector3.zero;
 		rb = GetComponent<Rigidbody>();
-
+		audioComp = GetComponent<AudioSource>();
 	}
 
     IEnumerator shootBullet()
@@ -74,18 +86,17 @@ public class Player : characterTemplate
             return;
         }
 
-		// Moving
-		PlayerPilot();
-
 		// Shooting
-        if (Input.GetButton("Fire2") && ableToShoot)
+        if (Input.GetButton("Fire1") && ableToShoot)
         {
-            GameObject bullet = (GameObject)Instantiate(this.bulletsType[(int)currentBulletType].bulletPrefab,  bulletSpawn.transform.position, bulletSpawn.transform.rotation);
-            bullet.GetComponent<bulletTemplate>().StartBullet(transform.forward, this.bulletsType[(int)currentBulletType].bulletSpeed);
+			audioComp.Play();
 
-            this.ableToShoot = false;
+			GameObject bullet = (GameObject)Instantiate(bulletsType[(int)currentBulletType].bulletPrefab,  bulletSpawn.transform.position, bulletSpawn.transform.rotation);
+			bullet.GetComponent<bulletTemplate>().StartBullet(transform.forward, 70f); //bulletsType[(int)currentBulletType].bulletSpeed);
 
-            Destroy(bullet, this.bulletsType[(int)currentBulletType].bulletDestroyTime);
+            ableToShoot = false;
+
+            Destroy(bullet, bulletsType[(int)currentBulletType].bulletDestroyTime);
 
             StartCoroutine(shootBullet());
         }
@@ -101,21 +112,54 @@ public class Player : characterTemplate
         }
 
         Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
-        RaycastHit hit; 
+        RaycastHit hit;
         if (Physics.Raycast(ray, out hit, 1000f, this.groundMasks))
         {
             transform.LookAt(new Vector3(hit.point.x, transform.position.y, hit.point.z));
         }
+
+		// Moving
+		PlayerPilot();
 	}
+
+	private void OnCollisionEnter(Collision col)
+	{
+		if (col.gameObject.tag == "Enemy")
+		{
+			SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
+			UI_Manager.instance.initializedScene = false;
+			Destroy(this.gameObject);
+		}
+	}
+
 
 	void PlayerPilot()
 	{
-		float forward = Input.GetAxis("Vertical");
-		float lateral = Input.GetAxis("Horizontal");
+		float distToOrigin = Vector3.Distance(transform.position, origin);
+		//Debug.Log("dist: " + distToOrigin);
 
+		// Move Controls
+		forward = Input.GetAxis("Vertical");
+		lateral = Input.GetAxis("Horizontal");
 		Vector3 forwardVector = Vector3.forward * moveSpeed * forward;
 		Vector3 lateralVector = Vector3.right * moveSpeed * lateral;
 		rb.velocity = forwardVector + lateralVector;
+
+		// Edge Bounce
+		if (distToOrigin >= maxDistFromOrigin)
+		{
+			Vector3 toOrigin = origin - transform.position;
+			rb.AddForce(toOrigin * forceBounce, ForceMode.Force);
+		}
 	}
 
+	public float GetForwardInput()
+	{
+		return forward;
+	}
+
+	public float GetLateralInput()
+	{
+		return lateral;
+	}
 }

@@ -14,13 +14,29 @@ public class bulletTemplate : MonoBehaviour
     //bulletsType m_bulletType;
 
 	// Use this for initialization
-    public void StartBullet (Vector3 bulletDirection, float bulletSpeed = 50f) 
+    public void StartBullet (Vector3 bulletDirection, float bulletSpeed) 
     {
 		//Debug.Log(elementType.ToString());
-        this.speed = bulletSpeed;   	
-        this.travelDirection = bulletDirection;
+        speed = bulletSpeed;
+        travelDirection = bulletDirection;
+		ChangeColor();
 
-        gameObject.GetComponent<Rigidbody>().velocity = bulletDirection * this.speed;
+        gameObject.GetComponent<Rigidbody>().velocity = bulletDirection * speed;
+	}
+
+	void ChangeColor()
+	{
+		if(elementType == ElementalType.Element.Fire)
+		this.gameObject.GetComponent<MeshRenderer>().material.color = Color.red;
+
+		if (elementType == ElementalType.Element.Air)
+			this.gameObject.GetComponent<MeshRenderer>().material.color = Color.white;
+
+		if (elementType == ElementalType.Element.Earth)
+			this.gameObject.GetComponent<MeshRenderer>().material.color = Color.black;
+
+		if (elementType == ElementalType.Element.Water)
+			this.gameObject.GetComponent<MeshRenderer>().material.color = Color.blue;
 	}
 	
 	// Update is called once per frame
@@ -31,14 +47,13 @@ public class bulletTemplate : MonoBehaviour
 
     void OnCollisionEnter(Collision collision)
     {
-        Destroy(gameObject);
+		if (collision.gameObject.tag == "test")
+		{
+			collision.gameObject.SendMessage("Explode", elementType);
+		}
 
-        Debug.Log(collision.gameObject.tag);
-
-        if(collision.gameObject.tag == "test")
-        {
-            collision.gameObject.SendMessage("Explode", elementType);
-        }
+		//Debug.Log(collision.gameObject.tag);
+		Destroy(gameObject);
     }
 
    
