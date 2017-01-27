@@ -19,7 +19,7 @@ public class EnemyMovement : characterTemplate {
 	{
 		rb = GetComponent<Rigidbody>();
 		rb.velocity = Vector3.zero;
-		moveSpeedActual = moveSpeed;
+		moveSpeedActual = moveSpeed + Random.Range(0, moveSpeed);
 		turnSpeedActual = turnSpeed;
 	}
 
@@ -29,7 +29,7 @@ public class EnemyMovement : characterTemplate {
 			target = GameObject.FindGameObjectWithTag("Player").transform;
 
 		rb = GetComponent<Rigidbody>();
-		moveSpeedActual = moveSpeed;
+		moveSpeedActual = moveSpeed + Random.Range(0, moveSpeed);
 		turnSpeedActual = turnSpeed;
 	}
 	

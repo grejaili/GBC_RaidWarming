@@ -27,16 +27,21 @@ public class bulletTemplate : MonoBehaviour
 	void ChangeColor()
 	{
 		if(elementType == ElementalType.Element.Fire)
-		this.gameObject.GetComponent<MeshRenderer>().material.color = Color.red;
-
+		{
+			this.gameObject.GetComponent<MeshRenderer>().material.color = Color.red;
+		}
 		if (elementType == ElementalType.Element.Air)
+		{
 			this.gameObject.GetComponent<MeshRenderer>().material.color = Color.white;
-
+		}
 		if (elementType == ElementalType.Element.Earth)
+		{
 			this.gameObject.GetComponent<MeshRenderer>().material.color = Color.black;
-
+		}
 		if (elementType == ElementalType.Element.Water)
+		{
 			this.gameObject.GetComponent<MeshRenderer>().material.color = Color.blue;
+		}
 	}
 	
 	// Update is called once per frame

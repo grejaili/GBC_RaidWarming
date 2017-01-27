@@ -63,15 +63,23 @@ public class Player : characterTemplate
 	float forward;
 	float lateral;
 
+	public int elementAura = 0;
+	public Sprite fireAura;
+	public Sprite earthAura;
+	public Sprite airAura;
+	public Sprite waterAura;
+	SpriteRenderer auraRender;
+
 	// Use this for initialization
 	void Start ()
 	{
 		origin = Vector3.zero;
 		rb = GetComponent<Rigidbody>();
 		audioComp = GetComponent<AudioSource>();
+		auraRender = GameObject.Find("Aura").GetComponent<SpriteRenderer>();
 	}
 
-    IEnumerator shootBullet()
+	IEnumerator shootBullet()
     {
         yield return new WaitForSeconds(bulletsType[(int)currentBulletType].coolDown);
 
@@ -100,7 +108,17 @@ public class Player : characterTemplate
 
             StartCoroutine(shootBullet());
         }
-    }
+
+		// Handle Aura - ultra ghetto
+		int elemento = (int)currentBulletType;
+		switch (elemento)
+		{
+			case 0: auraRender.sprite = fireAura; break;
+			case 1: auraRender.sprite = earthAura; break;
+			case 2: auraRender.sprite = airAura; break;
+			case 3: auraRender.sprite = waterAura; break;
+		}
+	}
 	
 	// Update is called once per frame
 	void LateUpdate () 

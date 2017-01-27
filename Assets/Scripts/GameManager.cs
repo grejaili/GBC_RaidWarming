@@ -18,14 +18,17 @@ public class GameManager : MonoBehaviour {
 	List<GameObject> enemyPopulation;
 	List<GameObject> wavePopulation;
 
+	GameObject player;
+	bool bScrolling = false;
+	float lastScrollTime = 0.0f;
+
 
 	// Use this for initialization
 	void Start ()
 	{
 		enemyPopulation = new List<GameObject>();
 		wavePopulation = new List<GameObject>();
-
-		
+		player = FindObjectOfType<Player>().gameObject;
 
 		// Checks if a GameManager exists, and destroys the second copy.
 		if (instance)
@@ -87,9 +90,9 @@ public class GameManager : MonoBehaviour {
 		}
 
 		// Scroll to Change Weapon
-		if (Input.GetAxis("Mouse ScrollWheel") > 0)
+		if (Input.GetAxis("Mouse ScrollWheel") > 0 && !bScrolling)
 		{
-			Debug.Log(UI_Manager.instance.GetBulletType());
+			bScrolling = true;
 
 			if (UI_Manager.instance.GetBulletType() < 3)
 			{
@@ -100,10 +103,12 @@ public class GameManager : MonoBehaviour {
 			{
 				UI_Manager.instance.SetBulletType(0);
 			}
+
+			lastScrollTime = Time.time;
 		}
-		else if (Input.GetAxis("Mouse ScrollWheel") < 0)
+		else if (Input.GetAxis("Mouse ScrollWheel") < 0 && !bScrolling)
 		{
-			//Debug.Log(UI_Manager.instance.GetBulletType());
+			bScrolling = true;
 
 			if (UI_Manager.instance.GetBulletType() > 0)
 			{
@@ -114,6 +119,13 @@ public class GameManager : MonoBehaviour {
 			{
 				UI_Manager.instance.SetBulletType(3);
 			}
+
+			lastScrollTime = Time.time;
+		}
+		else if (Input.GetAxis("Mouse ScrollWheel") == 0) /// not scrolling
+		{
+			if (Time.time >= lastScrollTime + 0.1f)
+				bScrolling = false;
 		}
 
 	}
@@ -154,7 +166,6 @@ public class GameManager : MonoBehaviour {
 	/// 
 	void SpawnEnemy(uint numberOfEnemiesToSpawn)
 	{
-		
 		if (SceneManager.GetActiveScene().buildIndex == 1)
 		{
 			//Vector3 lastSpawnLocation = new Vector3();
@@ -168,10 +179,13 @@ public class GameManager : MonoBehaviour {
 						float theta = Random.Range(0.0f, 360.0f);
 						int enemyTypeToSpawn = Random.Range(0, enemies.Length);
 						float rando = Random.Range(radius / 2, radius * 2);
+
+						// Prepare spawn position
 						float x = transform.position.x + rando * Mathf.Cos(theta * Mathf.Deg2Rad);
 						float z = transform.position.z + rando * Mathf.Sin(theta * Mathf.Deg2Rad);
+						Vector3 toPlayer = Vector3.ProjectOnPlane(player.transform.position - transform.position, Vector3.forward);
 
-						Vector3 spawnLocation = new Vector3(x, 0.0f, z);
+						Vector3 spawnLocation = new Vector3(x, 0.0f, z) + (-toPlayer * 0.5f);
 						GameObject newEnemy = enemyPopulation[j];
 						newEnemy.transform.position = spawnLocation;
 						newEnemy.SetActive(true);
